@@ -7,15 +7,16 @@
 
 #include "Enum.h"
 #include <iostream>
+#include <utility>
 using namespace std;
 
-template<typename T>
 class Token {
 public:
-    Token(TokenType t, string lexeme, T ll, int l) {
+    TokenType type;
+    Token(TokenType t, string lexeme, std::string ll, int l) {
         type = t;
         lexeme = lexeme;
-        literal = ll;
+        literal = std::move(ll);
         line = l;
     }
 
@@ -26,20 +27,11 @@ public:
     string toString();
 
 private:
-    TokenType type;
     string lexeme;
     // todo
-    T literal;
+    std::string literal;
     int line;
 };
-
-template<typename T>
-string Token<T>::toString() {
-    auto a = type;
-    auto b = lexeme;
-    auto c = literal;
-    return std::__cxx11::string();
-}
 
 
 #endif //JLOX_TOKEN_H

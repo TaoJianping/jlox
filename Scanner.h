@@ -15,7 +15,7 @@ using namespace std;
 class Scanner {
 private:
     string source;
-    vector<Token<std::any>*> tokens;
+    vector<Token *> tokens;
     int line;
     int start;
 
@@ -41,7 +41,7 @@ public:
         current = 0;
     }
 
-    const vector<Token<std::any> *> & scanTokens();
+    const vector<Token *> & scanTokens();
 };
 
 

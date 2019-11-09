@@ -11,15 +11,30 @@
 #include "Token.h"
 #include "Expr.h"
 
+using namespace std;
+
 class Parser {
 private:
-    std::vector<Token<std::any>> tokens;
+    std::vector<Token*> tokens;
     int current;
-    Expr expression();
-    Expr equality();
+    Expr* expression();
+    Expr* equality();
+    Expr* comparison();
+    Expr* addition();
+    Expr* multiplication();
+    Expr* unary();
+    Expr* primary();
+    Token* consume(TokenType, const std::string&);
+    bool match(const vector<TokenType>&);
+    bool match(TokenType);
+    bool check(TokenType type);
+    Token* advance();
+    bool isAtEnd();
+    Token* peek();
+    Token* previous();
 
 public:
-    explicit Parser(const std::vector<Token<std::any>> & ts) {
+    explicit Parser(const std::vector<Token *> & ts) {
         tokens = ts;
         current = 0;
     }

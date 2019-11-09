@@ -11,3 +11,6 @@
 //    std::string  str = ss.str();
 //    return str;
 //}
+string Token::toString() {
+    return std::__cxx11::string();
+}

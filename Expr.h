@@ -13,131 +13,129 @@
 //#include "AstPrinter.h"
 
 
-
+// expression   → literal
+//              | unary
+//              | binary
+//              | grouping ;
+//
+// literal    → NUMBER | STRING | "false" | "true" | "nil" ;
+// grouping   → "(" expression ")" ;
+// unary      → ( "-" | "!" ) expression ;
+// binary     → expression operator expression ;
+// operator   → "==" | "!=" | "<" | "<=" | ">" | ">="
+//               | "+"  | "-"  | "*" | "/" ;
 
 
 class Expr {
 
 };
 
-template<typename T>
-class Binary : Expr {
+class Binary : public Expr {
 public:
-    Binary(Expr l, const Token<T> &o, Expr r) : left(l), m_operator(o), right(r) {};
+    Binary(Expr* l, const Token &o, Expr* r) : left(l), m_operator(o), right(r) {};
 private:
-    Expr left;
-    Token<T> m_operator;
-    Expr right;
+    Expr* left;
+    Token m_operator;
+    Expr* right;
 };
 
 
-template<typename T>
 class Assign : Expr {
 private:
-    Token<T> name;
-    Expr value;
+    Token name;
+    Expr* value;
 public:
-    Assign(const Token<T> &n, Expr v) : name(n), value(v) {};
+    Assign(const Token &n, Expr* v) : name(n), value(v) {};
 };
 
 
-template<typename T>
 class Call : Expr {
 private:
-    Token<T> paren;
-    Expr callee;
-    std::vector<Token<T>> arguments;
+    Token paren;
+    Expr* callee;
+    std::vector<Token*> arguments;
 public:
-    Call(const Token<T> &p, Expr c, std::vector<Token<T>> args) : paren(p), callee(c),
+    Call(const Token &p, Expr* c, std::vector<Token*> args) : paren(p), callee(c),
                                                                                 arguments(std::move(args)) {};
 };
 
 
-template<typename T>
 class Get : Expr {
 private:
-    Token<T> name;
-    Expr object;
+    Token name;
+    Expr* object;
 public:
-    Get(Expr o, const Token<T> &n) : object(o), name(n) {};
+    Get(Expr* o, const Token &n) : object(o), name(n) {};
 };
 
 
-template<typename T>
 class Set : Expr {
 private:
-    Expr object;
-    Token<T> name;
-    Expr value;
+    Expr* object;
+    Token name;
+    Expr* value;
 public:
-    Set(Expr o, const Token<T> &n, Expr v) : object(o), name(n), value(v) {};
+    Set(Expr* o, const Token &n, Expr* v) : object(o), name(n), value(v) {};
 };
 
 
-template<typename T>
 class Grouping : Expr {
 private:
-    Expr expression;
+    Expr* expression;
 public:
-    explicit Grouping(Expr e) : expression(e) {};
+    explicit Grouping(Expr* e) : expression(e) {};
 };
 
 
-template<typename T>
 class Literal : Expr {
 private:
-    T value;
+    Token value;
 public:
-    explicit Literal(T v) : value(v) {};
+    explicit Literal(const Token& v) : value(v) {};
 };
 
 
-template<typename T>
 class Logical : Expr {
 public:
-    Logical(Expr l, const Token<T> &o, Expr r) : left(l), m_operator(o), right(r) {};
+    Logical(Expr* l, const Token &o, Expr* r) : left(l), m_operator(o), right(r) {};
 private:
-    Expr left;
-    Token<T> m_operator;
-    Expr right;
+    Expr* left;
+    Token m_operator;
+    Expr* right;
 };
 
 
-template<typename T>
 class Super : Expr {
 private:
-    Token<T> keyword;
-    Token<T> method;
+    Token keyword;
+    Token method;
 public:
-    Super(const Token<T> &k, const Token<T> &m) : keyword(k), method(m) {};
+    Super(const Token &k, const Token &m) : keyword(k), method(m) {};
 };
 
 
-template<typename T>
 class This : Expr {
 private:
-    Token<T> keyword;
+    Token keyword;
 public:
-    explicit This(const Token<T> &k) : keyword(k) {};
+    explicit This(const Token &k) : keyword(k) {};
 };
 
 
-template<typename T>
 class Unary : Expr {
 private:
-    Token<T> m_operator;
-    Expr right;
+    Token m_operator;
+    Expr* right;
 public:
-    Unary(const Token<T> &o, Expr r) : m_operator(o), right(r) {};
+    Unary(const Token &o, Expr* r) : m_operator(o), right(r) {};
 };
 
 
-template<typename T>
 class Variable : Expr {
 private:
-    Token<T> name;
+    Token name;
 public:
-    explicit Variable(const Token<T> &n) : name(n) {};
+    explicit Variable(const Token &n) : name(n) {};
 };
 
 

@@ -10,12 +10,12 @@
 #include <vector>
 
 
-const vector<Token<std::any>*> & Scanner::scanTokens()  {
+const vector<Token*> & Scanner::scanTokens()  {
     while (!isAtEnd()) {
         start = current;
         scanToken();
     }
-    auto et = new Token<std::any>(TokenType::END_OF_FILE, "", "", line);
+    auto et = new Token(TokenType::END_OF_FILE, "", "", line);
     tokens.push_back(et);
     return tokens;
 }
@@ -112,13 +112,13 @@ void Scanner::addToken(TokenType tt) {
 void Scanner::addToken(TokenType type, string literal) {
     // Todo
     string text = source.substr(start, (current - start));
-    auto t = new Token<std::any>(type, text, literal, line);
+    auto t = new Token<>(type, text, literal, line);
     tokens.push_back(t);
 }
 
 void Scanner::addToken(TokenType type, nullptr_t aNullptr) {
     string text = source.substr(start, (current - start));
-    auto t = new Token<std::any>(type, text, aNullptr, line);
+    auto t = new Token(type, text, aNullptr, line);
     tokens.push_back(t);
 }
 
@@ -172,12 +172,6 @@ void Scanner::readNumber() {
 char Scanner::peekNext() {
     if (current + 1 >= source.length()) return '\0';
     return source.at(current + 1);
-}
-
-void Scanner::addToken(TokenType type, double literal) {
-    string text = source.substr(start, (current - start));
-    auto t = new Token<std::any>(type, text, literal, line);
-    tokens.push_back(t);
 }
 
 void Scanner::identifier() {
