@@ -25,12 +25,12 @@ public:
     }
 
     string toString();
+    int line;
+    string lexeme;
+    std::string literal;
 
 private:
-    string lexeme;
     // todo
-    std::string literal;
-    int line;
 };
 
 

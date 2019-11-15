@@ -9,6 +9,8 @@
 
 using namespace std;
 
+bool Lox::hasError = false;
+
 void Lox::main(int argc,char *argv[]) {
     if (argc > 1) {
         std::cout << "Usage: jlox [script]";
@@ -27,14 +29,17 @@ void Lox::runFile(string const & path) {
     run(fileContent);
 }
 
-
-void Lox::error(int line, char * message) {
-    report(line, "", message);
+void Lox::error(const Token& token, std::string message) {
+    if (token.type == TokenType::END_OF_FILE) {
+        Lox::report(token.line, " at end", message);
+    } else {
+        Lox::report(token.line, " at '" + token.lexeme + "'", message);
+    }
 }
 
-void Lox::report(int line, string const &where  , string const &messages) {
+void Lox::report(int line, string const& where  , string const& messages) {
     std::cout <<  "[line " <<  line << "] Error" + where + ": " + messages << endl;
-    hasError = true;
+    Lox::hasError = true;
 }
 
 void Lox::runPrompt() {
@@ -49,7 +54,7 @@ void Lox::run(string const &source) {
     for (auto t: tokens) {
         t->toString();
     }
-    if (hasError) {
+    if (Lox::hasError) {
         exit(65);
     }
 }

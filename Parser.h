@@ -13,6 +13,9 @@
 
 using namespace std;
 
+class ParseException : std::exception {};
+
+
 class Parser {
 private:
     std::vector<Token*> tokens;
@@ -25,6 +28,7 @@ private:
     Expr* unary();
     Expr* primary();
     Token* consume(TokenType, const std::string&);
+    ParseException* error(Token*, std::string);
     bool match(const vector<TokenType>&);
     bool match(TokenType);
     bool check(TokenType type);

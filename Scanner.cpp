@@ -112,7 +112,7 @@ void Scanner::addToken(TokenType tt) {
 void Scanner::addToken(TokenType type, string literal) {
     // Todo
     string text = source.substr(start, (current - start));
-    auto t = new Token<>(type, text, literal, line);
+    auto t = new Token(type, text, literal, line);
     tokens.push_back(t);
 }
 

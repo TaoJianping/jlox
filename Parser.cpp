@@ -4,6 +4,17 @@
 
 #include "Parser.h"
 
+#include <utility>
+
+//  expression     → equality ;
+//  equality       → comparison ( ( "!=" | "==" ) comparison )* ;
+//  comparison     → addition ( ( ">" | ">=" | "<" | "<=" ) addition )* ;
+//  addition       → multiplication ( ( "-" | "+" ) multiplication )* ;
+//  multiplication → unary ( ( "/" | "*" ) unary )* ;
+//  unary          → ( "!" | "-" ) unary | primary ;
+//  primary        → NUMBER | STRING | "false" | "true" | "nil" | "(" expression ")";
+
+
 Expr *Parser::expression() {
     return equality();
 }
@@ -59,7 +70,7 @@ Expr *Parser::equality() {
     while (match(ts)) {
         Token &oper = *previous();
         Expr *right = comparison();
-        expr = (Expr *) new Binary(expr, oper, right);
+        expr = static_cast<Expr*>(new Binary(expr, oper, right));
     }
 
     return expr;
@@ -163,8 +174,8 @@ Token *Parser::consume(TokenType type, const std::string& msg) {
     if (check(type)) {
         return advance();
     }
-
-    throw msg;
+    return nullptr;
+    throw error(peek(), msg);
 }
 
 

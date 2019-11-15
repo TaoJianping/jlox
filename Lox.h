@@ -6,16 +6,17 @@
 #define JLOX_LOX_H
 #include <iostream>
 using namespace std;
+#include "Token.h"
 
 class Lox {
 public:
     void main(int argc,char *argv[]);
     void runFile(string const & path);
-    void error(int, char*);
+    void error(const Token& token, std::string);
     void runPrompt();
+    static bool hasError;
 private:
-    bool hasError;
-    void report(int, string const &where, string const &messages);
+    static void report(int, string const &where, string const &messages);
     void run(string const & source);
 };
 
