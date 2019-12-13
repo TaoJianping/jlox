@@ -3,6 +3,7 @@
 //
 
 #include "Parser.h"
+#include "Lox.h"
 
 #include <utility>
 
@@ -13,6 +14,15 @@
 //  multiplication → unary ( ( "/" | "*" ) unary )* ;
 //  unary          → ( "!" | "-" ) unary | primary ;
 //  primary        → NUMBER | STRING | "false" | "true" | "nil" | "(" expression ")";
+
+
+Expr *Parser::parse() {                
+    try {                       
+        return expression();      
+    } catch (ParseException error) {
+        return nullptr;              
+    }                           
+}        
 
 
 Expr *Parser::expression() {
@@ -149,10 +159,11 @@ Expr *Parser::unary() {
 // primary → NUMBER | STRING | "false" | "true" | "nil" | "(" expression ")" ;
 Expr *Parser::primary() {
 
+    if (match(TokenType::FALSE)) return (Expr *) new Literal(*previous());
+    if (match(TokenType::TRUE)) return (Expr *) new Literal(*previous());
+    if (match(TokenType::NIL)) return (Expr *) new Literal(*previous());
+
     auto ts = std::vector<TokenType>();
-    ts.push_back(TokenType::FALSE);
-    ts.push_back(TokenType::TRUE);
-    ts.push_back(TokenType::NIL);
     ts.push_back(TokenType::STRING);
     ts.push_back(TokenType::NUMBER);
 
@@ -166,16 +177,20 @@ Expr *Parser::primary() {
         consume(TokenType::RIGHT_PAREN, "Expect ')' after expression.");
         return (Expr *) new Grouping(expr);
     }
-
-    throw std::exception();
+    
+    throw error(*peek(), "Expect expression.");
 }
 
 Token *Parser::consume(TokenType type, const std::string& msg) {
     if (check(type)) {
         return advance();
     }
-    return nullptr;
-    throw error(peek(), msg);
+    throw error(*peek(), msg);
+}
+
+ParseException *Parser::error(const Token& token, const std::string& msg) {
+    Lox::error(token, msg);
+    return new ParseException();
 }
 
 

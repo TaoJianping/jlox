@@ -13,32 +13,52 @@
 
 using namespace std;
 
-class ParseException : std::exception {};
+class ParseException : std::exception {
+};
 
 
 class Parser {
 private:
-    std::vector<Token*> tokens;
+    std::vector<Token *> tokens;
     int current;
-    Expr* expression();
-    Expr* equality();
-    Expr* comparison();
-    Expr* addition();
-    Expr* multiplication();
-    Expr* unary();
-    Expr* primary();
-    Token* consume(TokenType, const std::string&);
-    ParseException* error(Token*, std::string);
-    bool match(const vector<TokenType>&);
+
+    Expr *expression();
+
+    Expr *equality();
+
+    Expr *comparison();
+
+    Expr *addition();
+
+    Expr *multiplication();
+
+    Expr *unary();
+
+    Expr *primary();
+
+    Token *consume(TokenType, const std::string &);
+
+    ParseException *error(const Token &, const std::string &);
+
+    bool match(const vector<TokenType> &);
+
     bool match(TokenType);
+
     bool check(TokenType type);
-    Token* advance();
+
+    Token *advance();
+
     bool isAtEnd();
-    Token* peek();
-    Token* previous();
+
+    Token *peek();
+
+    Token *previous();
+
 
 public:
-    explicit Parser(const std::vector<Token *> & ts) {
+    Expr *parse();
+
+    explicit Parser(const std::vector<Token *> &ts) {
         tokens = ts;
         current = 0;
     }

@@ -30,6 +30,7 @@ class Expr {
 
 };
 
+
 class Binary : public Expr {
 public:
     Binary(Expr* l, const Token &o, Expr* r) : left(l), m_operator(o), right(r) {};

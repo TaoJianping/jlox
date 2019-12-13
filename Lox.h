@@ -12,7 +12,7 @@ class Lox {
 public:
     void main(int argc,char *argv[]);
     void runFile(string const & path);
-    void error(const Token& token, std::string);
+    static void error(const Token& token, std::string);
     void runPrompt();
     static bool hasError;
 private:

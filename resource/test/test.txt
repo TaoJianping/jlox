@@ -1,2 +1,2 @@
-var language = "lox";
-var language = 123;
+123 == 12;
+

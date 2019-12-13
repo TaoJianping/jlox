@@ -4,8 +4,10 @@
 
 #include "Lox.h"
 #include "Scanner.h"
+#include "Parser.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -23,10 +25,14 @@ void Lox::main(int argc,char *argv[]) {
 }
 
 void Lox::runFile(string const & path) {
-    std::ifstream t(path);
-    std::string fileContent((std::istreambuf_iterator<char>(t)),
-                    std::istreambuf_iterator<char>());
-    run(fileContent);
+    std::ifstream file;
+    file.open(path);
+    if (file.is_open()) {
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+        std::string fileContent(buffer.str());
+        run(fileContent);
+    }
 }
 
 void Lox::error(const Token& token, std::string message) {
@@ -49,8 +55,10 @@ void Lox::runPrompt() {
 }
 
 void Lox::run(string const &source) {
-    auto scanner = new Scanner(source);
-    auto tokens = scanner->scanTokens();
+    auto scanner = Scanner(source);
+    auto tokens = scanner.scanTokens();
+    auto parser = new Parser(tokens);
+    Expr* expr = parser->parse();
     for (auto t: tokens) {
         t->toString();
     }

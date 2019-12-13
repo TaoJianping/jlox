@@ -6,6 +6,6 @@
 #include "Lox.h"
 
 void TestLox::run() {
-    std::string path = R"(C:\Users\taojianping\Documents\PeronalProjects\jlox\source\test\test.txt)";
+    std::string path = R"(C:\Users\taojianping\Documents\PeronalProjects\jlox\resource\test\test.txt)";
     Lox().runFile(path);
 }

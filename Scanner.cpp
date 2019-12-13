@@ -118,7 +118,7 @@ void Scanner::addToken(TokenType type, string literal) {
 
 void Scanner::addToken(TokenType type, nullptr_t aNullptr) {
     string text = source.substr(start, (current - start));
-    auto t = new Token(type, text, aNullptr, line);
+    auto t = new Token(type, text, "nil", line);
     tokens.push_back(t);
 }
 
