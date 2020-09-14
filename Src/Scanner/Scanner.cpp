@@ -3,9 +3,9 @@
 //
 
 #include "Scanner.h"
-#include "Enum.h"
-#include "Lox.h"
-#include "Config.h"
+#include "../../Enum.h"
+#include "../Lox.h"
+#include "../../Config.h"
 #include <utility>
 #include <vector>
 

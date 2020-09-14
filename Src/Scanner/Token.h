@@ -5,7 +5,7 @@
 #ifndef JLOX_TOKEN_H
 #define JLOX_TOKEN_H
 
-#include "Enum.h"
+#include "../../Enum.h"
 #include <iostream>
 #include <utility>
 using namespace std;
@@ -21,7 +21,7 @@ public:
     }
 
     ~Token() {
-        std::cout << "Îö¹¹ÖÐ~~~\n";
+        std::cout << "Fuck~~~\n";
     }
 
     string toString();

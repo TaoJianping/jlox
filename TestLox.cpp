@@ -3,7 +3,7 @@
 //
 
 #include "TestLox.h"
-#include "Lox.h"
+#include "Src/Lox.h"
 
 void TestLox::run() {
     std::string path = R"(C:\Users\taojianping\Documents\PeronalProjects\jlox\resource\test\test.txt)";

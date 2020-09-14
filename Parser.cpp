@@ -3,7 +3,7 @@
 //
 
 #include "Parser.h"
-#include "Lox.h"
+#include "Src/Lox.h"
 
 #include <utility>
 

@@ -3,8 +3,8 @@
 //
 
 #include "Lox.h"
-#include "Scanner.h"
-#include "Parser.h"
+#include "Scanner/Scanner.h"
+// #include "../Parser.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -13,7 +13,7 @@ using namespace std;
 
 bool Lox::hasError = false;
 
-void Lox::main(int argc,char *argv[]) {
+int Lox::main(int argc,char *argv[]) {
     if (argc > 1) {
         std::cout << "Usage: jlox [script]";
         exit(64);
@@ -22,6 +22,8 @@ void Lox::main(int argc,char *argv[]) {
     } else {
         runPrompt();
     }
+
+    return 0;
 }
 
 void Lox::runFile(string const & path) {
@@ -57,8 +59,8 @@ void Lox::runPrompt() {
 void Lox::run(string const &source) {
     auto scanner = Scanner(source);
     auto tokens = scanner.scanTokens();
-    auto parser = new Parser(tokens);
-    Expr* expr = parser->parse();
+//    auto parser = new Parser(tokens);
+//    Expr* expr = parser->parse();
     for (auto t: tokens) {
         t->toString();
     }
