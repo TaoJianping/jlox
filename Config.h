@@ -7,7 +7,7 @@
 
 #include <string>
 #include <unordered_map>
-#include "Enum.h"
+#include "Src/Common/Enum.h"
 
 const std::unordered_map<std::string, TokenType> KEYWORDS = {
         {"and",    TokenType::AND},

@@ -3,7 +3,7 @@
 //
 
 #include "Scanner.h"
-#include "../../Enum.h"
+#include "../Common/Enum.h"
 #include "../Lox.h"
 #include "../../Config.h"
 #include <utility>

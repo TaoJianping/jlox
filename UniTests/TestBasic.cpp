@@ -8,6 +8,6 @@
 
 
 TEST(testString, test1) {
-    auto lox = new Lox();
-    lox->runFile("../resource/test/test.txt");
+//    auto lox = new Lox();
+//    lox->runFile("../resource/test/test.txt");
 }
