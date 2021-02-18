@@ -3,7 +3,7 @@
 //
 
 #include "Lox.h"
-#include "Scanner/Scanner.h"
+#include "Scanner.h"
 // #include "../Parser.h"
 #include <iostream>
 #include <fstream>
@@ -37,12 +37,8 @@ void Lox::runFile(string const & path) {
     }
 }
 
-void Lox::error(const Token& token, std::string message) {
-    if (token.type == TokenType::END_OF_FILE) {
-        Lox::report(token.line, " at end", message);
-    } else {
-        Lox::report(token.line, " at '" + token.lexeme + "'", message);
-    }
+void Lox::error(int line, std::string message) {
+    Lox::report(line, "", message);
 }
 
 void Lox::report(int line, string const& where  , string const& messages) {
@@ -50,6 +46,10 @@ void Lox::report(int line, string const& where  , string const& messages) {
     Lox::hasError = true;
 }
 
+/*
+ * 教程里面是直接在终端运行，类似于直接打开Python，跳出来终端
+ * 我就暂时略过
+ * */
 void Lox::runPrompt() {
     std::cout << "> " << std::endl;
     std::string test = "var language = \"lox\";";

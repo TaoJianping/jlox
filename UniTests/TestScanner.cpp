@@ -4,7 +4,7 @@
 
 #include "TestScanner.h"
 #include "gtest/gtest.h"
-#include "../Src/Scanner/Scanner.h"
+#include "Scanner.h"
 
 
 TEST(testScanner, test1) {

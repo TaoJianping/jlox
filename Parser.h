@@ -8,7 +8,7 @@
 
 #include <vector>
 #include <any>
-#include "Scanner/Token.h"
+#include "Token.h"
 #include "Expr.h"
 
 using namespace std;

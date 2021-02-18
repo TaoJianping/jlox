@@ -9,7 +9,7 @@
 #include <any>
 #include <utility>
 #include <vector>
-#include "Scanner/Token.h"
+#include "Token.h"
 //#include "AstPrinter.h"
 
 

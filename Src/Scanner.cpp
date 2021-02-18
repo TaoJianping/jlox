@@ -3,14 +3,13 @@
 //
 
 #include "Scanner.h"
-#include "../Common/Enum.h"
-#include "../Lox.h"
-#include "../../Config.h"
+#include "Token.h"
+#include "Lox.h"
 #include <utility>
 #include <vector>
 
 
-const vector<Token*> & Scanner::scanTokens()  {
+vector<Lexeme::Token*> Lexer::Scanner::scanTokens()  {
     while (!isAtEnd()) {
         start = current;
         scanToken();
@@ -20,11 +19,11 @@ const vector<Token*> & Scanner::scanTokens()  {
     return tokens;
 }
 
-bool Scanner::isAtEnd() {
+bool Lexer::Scanner::isAtEnd() {
     return current >= source.length();
 }
 
-void Scanner::scanToken() {
+void Lexer::Scanner::scanToken() {
     auto c = advance();
     switch (c) {
         case '(':
@@ -94,48 +93,50 @@ void Scanner::scanToken() {
             } else if (isalpha(c)) {
                 identifier();
             }
-            // Lox::error(line, "Unexpected character.");
+            Lox::error(line, "Unexpected character.");
             break;
     }
 }
 
-char Scanner::advance() {
+char Lexer::Scanner::advance() {
     char ret = source.at(current);
     current++;
     return ret;
 }
 
-void Scanner::addToken(TokenType tt) {
+void Lexer::Scanner::addToken(TokenType tt) {
     addToken(tt, nullptr);
 }
 
-void Scanner::addToken(TokenType type, string literal) {
+void Lexer::Scanner::addToken(TokenType type, string literal) {
     // Todo
     string text = source.substr(start, (current - start));
     auto t = new Token(type, text, literal, line);
     tokens.push_back(t);
 }
 
-void Scanner::addToken(TokenType type, nullptr_t aNullptr) {
-    string text = source.substr(start, (current - start));
-    auto t = new Token(type, text, "nil", line);
-    tokens.push_back(t);
-}
+//void Lexer::Scanner::addToken(TokenType type, nullptr_t aNullptr) {
+//    string text = source.substr(start, (current - start));
+//    auto t = new Token(type, text, "nil", line);
+//    tokens.push_back(t);
+//}
 
-bool Scanner::match(char expected) {
-    if (expected != source.at(current)) {
+bool Lexer::Scanner::match(char expected) {
+	if (isAtEnd())
+		return false;
+    if (expected != source.at(current))
         return false;
-    }
+
     current++;
     return true;
 }
 
-char Scanner::peek() {
+char Lexer::Scanner::peek() {
     if (isAtEnd()) return '\0';
     return source.at(current);
 }
 
-void Scanner::readString() {
+void Lexer::Scanner::readString() {
     while (peek() != '"' && !isAtEnd()) {
         if (peek() == '\n') line++;
         advance();
@@ -143,7 +144,8 @@ void Scanner::readString() {
 
     // error handling
     if (isAtEnd()) {
-        std::cout << "Unterminated string." << std::endl;
+    	Lox::error(line, "Unterminated string.");
+//        std::cout << "Unterminated string." << std::endl;
         return;
     }
 
@@ -155,7 +157,7 @@ void Scanner::readString() {
     addToken(TokenType::STRING, value);
 }
 
-void Scanner::readNumber() {
+void Lexer::Scanner::readNumber() {
     while (isdigit(peek())) advance();
 
     // Look for a fractional part.
@@ -169,12 +171,12 @@ void Scanner::readNumber() {
     addToken(TokenType::NUMBER, value);
 }
 
-char Scanner::peekNext() {
+char Lexer::Scanner::peekNext() {
     if (current + 1 >= source.length()) return '\0';
     return source.at(current + 1);
 }
 
-void Scanner::identifier() {
+void Lexer::Scanner::identifier() {
     while (isalnum(peek()) && peek() != ' ') advance();
 
     string text = source.substr(start, current);

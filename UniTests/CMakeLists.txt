@@ -34,4 +34,4 @@ set(
 
 
 ADD_EXECUTABLE(DSACPP_Test ${Headers} ${Sources})
-target_link_libraries(DSACPP_Test GTest::gtest GTest::gtest_main Scanner)
+target_link_libraries(DSACPP_Test GTest::gtest GTest::gtest_main)
