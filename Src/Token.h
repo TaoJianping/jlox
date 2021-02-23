@@ -7,9 +7,13 @@
 
 #include <iostream>
 #include <utility>
+#include <variant>
 
-namespace Lexeme {
-	enum class TokenType {
+
+namespace Lexeme
+{
+	enum class TokenType
+	{
 		// Single-character tokens.
 		LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE,
 		COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR,
@@ -30,18 +34,16 @@ namespace Lexeme {
 		END_OF_FILE
 	};
 
-	class Token {
+	class Token
+	{
 	public:
-		Token(TokenType t, std::string lexeme, std::string ll, int l);
+		Token(TokenType t, std::string lexeme, std::variant<std::monostate, std::string, double> literal, int l);
 
-		~Token() {
-			std::cout << "Fuck~~~\n";
-		}
-
-		friend std::ostream &operator<<( std::ostream &output, const Token &token )
+		friend std::ostream& operator<<(std::ostream& output, const Token& token)
 		{
 			std::string typeStr;
-			switch (token.type) {
+			switch (token.type)
+			{
 			case TokenType::LEFT_PAREN:
 				typeStr = "LEFT_PAREN";
 				break;
@@ -50,24 +52,23 @@ namespace Lexeme {
 			}
 
 //        output << "TokenType : " << token.lexeme;
-			output << "TokenLexeme : " << token.lexeme;
+			output << "TokenLexeme : " << token.lexeme << std::endl;
 			return output;
 		}
 
 		std::string toString();
 
+		TokenType getType();
+
+
 
 	private:
 		int line;
 		std::string lexeme;
-		std::string literal;
+		std::variant<std::monostate, std::string, double> literal;
 		TokenType type;
 	};
 }
-
-
-
-
 
 
 #endif //JLOX_TOKEN_H

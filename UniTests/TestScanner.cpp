@@ -4,16 +4,24 @@
 
 #include "TestScanner.h"
 #include "gtest/gtest.h"
-#include "Scanner.h"
+#include "../Src/Scanner.h"
+//#include "../Src/Token.h"
+//#include "Scanner.h"
 
 
 TEST(testScanner, test1) {
-    const string str = "123 == 12;";
-    auto scanner = Scanner(str);
+	using namespace Lexeme;
+    const std::string str = "var a = 123;";
+    auto scanner = Lexer::Scanner(str);
     auto ts = scanner.scanTokens();
 
     for (const auto t : ts)
     {
-        std::cout << t << std::endl;
+    	if (t->getType() == TokenType::NUMBER) {
+        	std::cout << t << std::endl;
+    	}
+    	if (t->getType() == TokenType::STRING) {
+
+    	}
     }
 }

@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.14)
 SET(CMAKE_TOOLCHAIN_FILE "/usr/local/vcpkg/scripts/buildsystems/vcpkg.cmake")
 
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_BUILD_TYPE debug)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
+
+
 project(jloxTests)
 
 # install google test
@@ -19,6 +26,9 @@ endif ()
 
 
 include_directories(../Src)
+#add_subdirectory(../Src SourceDir)
+
+
 
 set(
         Headers
@@ -33,5 +43,14 @@ set(
 )
 
 
-ADD_EXECUTABLE(DSACPP_Test ${Headers} ${Sources})
+set(
+        ExecutableFile
+        ../Src/Scanner.cpp
+        ../Src/Token.cpp
+        ../Src/Lox.cpp
+        ../Src/Expr.cpp
+)
+
+
+ADD_EXECUTABLE(DSACPP_Test ${Headers} ${Sources} ${ExecutableFile})
 target_link_libraries(DSACPP_Test GTest::gtest GTest::gtest_main)

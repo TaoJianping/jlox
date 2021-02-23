@@ -57,7 +57,7 @@ void Lox::runPrompt() {
 }
 
 void Lox::run(string const &source) {
-    auto scanner = Scanner(source);
+    auto scanner = Lexer::Scanner(source);
     auto tokens = scanner.scanTokens();
 //    auto parser = new Parser(tokens);
 //    Expr* expr = parser->parse();
