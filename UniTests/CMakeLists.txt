@@ -49,8 +49,8 @@ set(
         ../Src/Token.cpp
         ../Src/Lox.cpp
         ../Src/Expr.cpp
-)
+        ../Src/AstPrinter.cpp ../Src/AstPrinter.h TestTools.cpp TestTools.h)
 
 
-ADD_EXECUTABLE(DSACPP_Test ${Headers} ${Sources} ${ExecutableFile})
-target_link_libraries(DSACPP_Test GTest::gtest GTest::gtest_main)
+ADD_EXECUTABLE(LoxTest ${Headers} ${Sources} ${ExecutableFile})
+target_link_libraries(LoxTest GTest::gtest GTest::gtest_main)

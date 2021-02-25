@@ -16,7 +16,17 @@ Lexeme::Token::Token(Lexeme::TokenType t, std::string lexeme, std::variant<std::
 
 }
 
-Lexeme::TokenType Lexeme::Token::getType()
+Lexeme::TokenType Lexeme::Token::getType() const
 {
 	return this->type;
+}
+
+std::variant<std::monostate, std::string, double> Lexeme::Token::getLiteral() const
+{
+	return this->literal;
+}
+
+std::string Lexeme::Token::getLexeme() const
+{
+	return this->lexeme;
 }

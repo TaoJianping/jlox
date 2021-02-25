@@ -42,65 +42,66 @@ class Variable;
 
 template <typename T>
 class Visitor {
-	T visitBinaryExpr(Binary expr) = 0;
-	T visitGroupingExpr(Grouping expr) = 0;
-	T visitLiteralExpr(Literal expr) = 0;
-	T visitTernaryExpr(Ternary expr) = 0;
-	T visitUnaryExpr(Unary expr) = 0;
+public:
+	virtual T visit(const Binary* expr) = 0;
+	virtual T visit(const Grouping* expr) = 0;
+	virtual T visit(const Literal* expr) = 0;
+	virtual T visit(const Unary* expr) = 0;
 };
 
 
 class Expr {
-//	void accept(Visitor visitor);
-
+public:
+	virtual std::string accept(Visitor<std::string>* visitor) = 0;
 };
 
 
 class Binary : public Expr {
 public:
-	Binary(Expr* l, const Lexeme::Token &o, Expr* r) : left(l), m_operator(o), right(r) {};
-private:
+	Binary(Expr* l, Lexeme::Token* o, Expr* r) : left(l), m_operator(o), right(r) {};
 	Expr* left;
-	Lexeme::Token m_operator;
+	Lexeme::Token* m_operator;
 	Expr* right;
+	std::string accept(Visitor<std::string>* visitor) override;
 };
 
 
 class Grouping : public Expr {
-private:
-	Expr* expression;
 public:
+	Expr* expression;
 	explicit Grouping(Expr* e) : expression(e) {};
+	std::string accept(Visitor<std::string>* visitor) override;
 };
 
 
 class Literal : public Expr {
-private:
-	Lexeme::Token value;
 public:
-	explicit Literal(const Lexeme::Token& v) : value(v) {};
+	Lexeme::Token* value;
+	explicit Literal(Lexeme::Token* v) : value(v) {};
+
+	std::string accept(Visitor<std::string>* visitor) override;
 };
 
 
 class Unary : public Expr {
-private:
-	Lexeme::Token m_operator;
+public:
+	Lexeme::Token* m_operator;
 	Expr* right;
-public:
-	Unary(const Lexeme::Token &o, Expr* r) : m_operator(o), right(r) {};
+	Unary(Lexeme::Token* o, Expr* r) : m_operator(o), right(r) {};
+	std::string accept(Visitor<std::string>* visitor) override;
 };
 
 
-class Ternary : public Expr {
-private:
-	Lexeme::Token m_operator;
-	Expr left;
-	Expr middle;
-	Expr right;
-public:
-	Ternary(Lexeme::Token m_operator, Expr left, Expr middle, Expr right) : m_operator(m_operator), right(right) {};
-
-};
+//class Ternary : public Expr {
+//private:
+//	Lexeme::Token m_operator;
+//	Expr* left;
+//	Expr* middle;
+//	Expr* right;
+//public:
+//	Ternary(Lexeme::Token m_operator, Expr* left, Expr* middle, Expr* right) : m_operator(std::move(m_operator)), right(right) {};
+//
+//};
 
 
 

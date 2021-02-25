@@ -58,9 +58,11 @@ namespace Lexeme
 
 		std::string toString();
 
-		TokenType getType();
+		[[nodiscard]] TokenType getType() const;
 
+		[[nodiscard]] std::variant<std::monostate, std::string, double> getLiteral() const;
 
+		[[nodiscard]] std::string getLexeme() const;
 
 	private:
 		int line;
