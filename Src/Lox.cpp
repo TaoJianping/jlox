@@ -4,6 +4,7 @@
 
 #include "Lox.h"
 #include "Scanner.h"
+#include "Parser.h"
 // #include "../Parser.h"
 #include <iostream>
 #include <fstream>
@@ -59,8 +60,8 @@ void Lox::runPrompt() {
 void Lox::run(string const &source) {
     auto scanner = Lexer::Scanner(source);
     auto tokens = scanner.scanTokens();
-//    auto parser = new Parser(tokens);
-//    Expr* expr = parser->parse();
+    auto parser = new Parser(tokens);
+    Expr* expr = parser->parse();
     for (auto t: tokens) {
         t->toString();
     }

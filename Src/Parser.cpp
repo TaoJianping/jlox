@@ -19,7 +19,14 @@
 
 Expr* Parser::parse()
 {
-	return this->expression();
+	try
+	{
+		return this->expression();
+	}
+	catch (ParseException pe)
+	{
+		return nullptr;
+	}
 }
 
 Expr* Parser::expression()
