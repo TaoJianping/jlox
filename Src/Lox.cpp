@@ -68,3 +68,12 @@ void Lox::run(string const &source) {
         exit(65);
     }
 }
+
+void Lox::error(const Lexeme::Token* token, const std::string& message)
+{
+    if (token->getType() == Lexeme::TokenType::END_OF_FILE) {
+        Lox::report(token->getLine(), " at end", message);
+    } else {
+        Lox::report(token->getLine(), " at" + token->getLexeme(), message);
+    }
+}

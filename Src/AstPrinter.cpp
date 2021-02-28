@@ -15,7 +15,7 @@ std::string AstPrinter::visit(const Literal* literal)
 	{
 		return std::to_string(std::get<double>(literal->value->getLiteral()));
 	}
-	return std::__cxx11::string();
+	return "";
 }
 
 std::string AstPrinter::visit(const Unary* unary)

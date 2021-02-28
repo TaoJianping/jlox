@@ -20,6 +20,8 @@ public:
 
 	static void error(int line, std::string);
 
+	static void error(const Lexeme::Token* token, const std::string&);
+
 	void runPrompt();
 
 	static bool hasError;

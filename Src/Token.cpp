@@ -30,3 +30,8 @@ std::string Lexeme::Token::getLexeme() const
 {
 	return this->lexeme;
 }
+
+int32_t Lexeme::Token::getLine() const
+{
+	return this->line;
+}

@@ -64,6 +64,8 @@ namespace Lexeme
 
 		[[nodiscard]] std::string getLexeme() const;
 
+		[[nodiscard]] int32_t getLine() const;
+
 	private:
 		int line;
 		std::string lexeme;

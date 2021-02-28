@@ -5,7 +5,7 @@ SET(CMAKE_TOOLCHAIN_FILE "/usr/local/vcpkg/scripts/buildsystems/vcpkg.cmake")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_TYPE debug)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
 
 
 project(jloxTests)
@@ -49,7 +49,13 @@ set(
         ../Src/Token.cpp
         ../Src/Lox.cpp
         ../Src/Expr.cpp
-        ../Src/AstPrinter.cpp ../Src/AstPrinter.h TestTools.cpp TestTools.h)
+        ../Src/AstPrinter.cpp
+        ../Src/AstPrinter.h
+        TestTools.cpp
+        TestTools.h
+        ../Src/Parser.h
+        ../Src/Parser.cpp
+)
 
 
 ADD_EXECUTABLE(LoxTest ${Headers} ${Sources} ${ExecutableFile})
