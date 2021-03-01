@@ -37,7 +37,7 @@ namespace Lexeme
 	class Token
 	{
 	public:
-		Token(TokenType t, std::string lexeme, std::variant<std::monostate, std::string, double> literal, int l);
+		Token(TokenType t, std::string lexeme, std::variant<std::monostate, bool, double, std::string> literal, int l);
 
 		friend std::ostream& operator<<(std::ostream& output, const Token& token)
 		{
@@ -60,7 +60,7 @@ namespace Lexeme
 
 		[[nodiscard]] TokenType getType() const;
 
-		[[nodiscard]] std::variant<std::monostate, std::string, double> getLiteral() const;
+		[[nodiscard]] std::variant<std::monostate, bool, double, std::string> getLiteral() const;
 
 		[[nodiscard]] std::string getLexeme() const;
 
@@ -69,7 +69,7 @@ namespace Lexeme
 	private:
 		int line;
 		std::string lexeme;
-		std::variant<std::monostate, std::string, double> literal;
+		std::variant<std::monostate, bool, double, std::string> literal;
 		TokenType type;
 	};
 }

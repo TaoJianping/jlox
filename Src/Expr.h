@@ -10,7 +10,6 @@
 #include <utility>
 #include <vector>
 #include "Token.h"
-//#include "AstPrinter.h"
 
 
 // expression   → literal
@@ -40,6 +39,8 @@ class Super;
 class This;
 class Variable;
 
+using InterpreterValueType = std::variant<std::monostate, bool, double, std::string>;
+
 template <typename T>
 class Visitor {
 public:
@@ -53,6 +54,7 @@ public:
 class Expr {
 public:
 	virtual std::string accept(Visitor<std::string>* visitor) = 0;
+	virtual InterpreterValueType accept(Visitor<InterpreterValueType>* visitor) = 0;
 };
 
 

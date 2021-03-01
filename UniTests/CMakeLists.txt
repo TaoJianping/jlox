@@ -55,7 +55,7 @@ set(
         TestTools.h
         ../Src/Parser.h
         ../Src/Parser.cpp
-)
+        ../Src/Interpreter.cpp ../Src/Interpreter.h)
 
 
 ADD_EXECUTABLE(LoxTest ${Headers} ${Sources} ${ExecutableFile})
