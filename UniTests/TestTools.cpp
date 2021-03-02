@@ -16,14 +16,14 @@ TEST(testAstPrinterCase, test1) {
 	auto minusToken = new Lexeme::Token(Lexeme::TokenType::MINUS, "-", "", 1);
 
 
-	Expr* expression = new Binary(
-			new Unary(minusToken,
-					new Literal(new Lexeme::Token(Lexeme::TokenType::NUMBER, "123", n, 1))
-				),
-			new Token(TokenType::STAR, "*", "", 1),
-			new Grouping(new Literal(new Lexeme::Token(Lexeme::TokenType::NUMBER, "45.67", n1, 1)))
-
-		);
-	std::cout << visitor->print(*expression) << std::endl;
+//	Expr* expression = new Binary(
+//			new Unary(minusToken,
+//					new Literal(new Lexeme::Token(Lexeme::TokenType::NUMBER, "123", n, 1))
+//				),
+//			new Token(TokenType::STAR, "*", "", 1),
+//			new Grouping(new Literal(new Lexeme::Token(Lexeme::TokenType::NUMBER, "45.67", n1, 1)))
+//
+//		);
+//	std::cout << visitor->print(*expression) << std::endl;
 }
 

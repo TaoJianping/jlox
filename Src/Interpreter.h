@@ -11,15 +11,19 @@
 class Interpreter : public Visitor<InterpreterValueType>
 {
 private:
+	void print(const InterpreterValueType& data);
 	InterpreterValueType evaluate(Expr* expr);
 	bool isTruthy(InterpreterValueType object);
 	bool isEqual(const InterpreterValueType& a, const InterpreterValueType& b);
+	void checkNumberOperand(Lexeme::Token* _operator, const InterpreterValueType& right);
+	void checkNumberOperands(Lexeme::Token* _operator, const InterpreterValueType& left, const InterpreterValueType& right);
 public:
 	InterpreterValueType visit(const Literal* expr) override;
 	InterpreterValueType visit(const Grouping* expr) override;
 	InterpreterValueType visit(const Unary* expr) override;
 	InterpreterValueType visit(const Binary* expr) override;
 
+	void interpret(Expr* expr);
 };
 
 

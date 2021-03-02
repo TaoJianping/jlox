@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include "Token.h"
+#include "RunTimeException.h"
 
 using namespace std;
 
@@ -25,6 +26,10 @@ public:
 	void runPrompt();
 
 	static bool hasError;
+
+	static bool hadRuntimeError;
+
+	static void runtimeError(RunTimeException exception);
 private:
 	static void report(int, string const& where, string const& messages);
 

@@ -3,6 +3,8 @@
 //
 
 #include "Interpreter.h"
+#include "RunTimeException.h"
+#include "Lox.h"
 
 InterpreterValueType Interpreter::visit(const Literal* expr)
 {
@@ -28,6 +30,7 @@ InterpreterValueType Interpreter::visit(const Unary* expr)
 	{
 	case Lexeme::TokenType::MINUS:
 	{
+		this->checkNumberOperand(expr->m_operator, right);
 		double num = std::get<double>(right);
 		return -num;
 	}
@@ -48,11 +51,21 @@ InterpreterValueType Interpreter::visit(const Binary* expr)
 	switch (expr->m_operator->getType())
 	{
 	case Lexeme::TokenType::MINUS:
+	{
+		this->checkNumberOperands(expr->m_operator, left, right);
 		return std::get<double>(left) - std::get<double>(right);
+	}
+
 	case Lexeme::TokenType::SLASH:
+	{
+		this->checkNumberOperands(expr->m_operator, left, right);
 		return std::get<double>(left) / std::get<double>(right);
+	}
 	case Lexeme::TokenType::STAR:
+	{
+		this->checkNumberOperands(expr->m_operator, left, right);
 		return std::get<double>(left) * std::get<double>(right);
+	}
 	case Lexeme::TokenType::PLUS:
 	{
 		if (left.index() == 2 && right.index() == 2)
@@ -63,15 +76,28 @@ InterpreterValueType Interpreter::visit(const Binary* expr)
 		{
 			return std::get<std::string>(left) + std::get<std::string>(right);
 		}
+		throw RunTimeException("Operands must be two numbers or two strings.", expr->m_operator);
 	}
 	case Lexeme::TokenType::GREATER:
+	{
+		this->checkNumberOperands(expr->m_operator, left, right);
 		return std::get<double>(left) > std::get<double>(right);
+	}
 	case Lexeme::TokenType::GREATER_EQUAL:
+	{
+		this->checkNumberOperands(expr->m_operator, left, right);
 		return std::get<double>(left) >= std::get<double>(right);
+	}
 	case Lexeme::TokenType::LESS:
+	{
+		this->checkNumberOperands(expr->m_operator, left, right);
 		return std::get<double>(left) < std::get<double>(right);
+	}
 	case Lexeme::TokenType::LESS_EQUAL:
+	{
+		this->checkNumberOperands(expr->m_operator, left, right);
 		return std::get<double>(left) <= std::get<double>(right);
+	}
 	case Lexeme::TokenType::BANG_EQUAL:
 		return !this->isEqual(left, right);
 	case Lexeme::TokenType::EQUAL_EQUAL:
@@ -105,5 +131,45 @@ bool Interpreter::isTruthy(InterpreterValueType _object)
 	}
 
 	return true;
+}
+
+void Interpreter::interpret(Expr* expr)
+{
+	try
+	{
+		auto value = this->evaluate(expr);
+		this->print(value);
+	}
+	catch (RunTimeException& exception)
+	{
+		Lox::runtimeError(exception);
+	}
+
+}
+
+void Interpreter::checkNumberOperand(Lexeme::Token* _operator, const InterpreterValueType& right)
+{
+	if (right.index() == 2)
+		return;
+	throw RunTimeException("Operand must be a number.", _operator);
+}
+
+void Interpreter::checkNumberOperands(Lexeme::Token* _operator, const InterpreterValueType& left,
+		const InterpreterValueType& right)
+{
+	if (right.index() == 2 && left.index() == 2)
+		return;
+	throw RunTimeException("Operand must be a number.", _operator);
+}
+
+void Interpreter::print(const InterpreterValueType& data)
+{
+	if (data.index() == 2) {
+		std::cout << std::get<double>(data) << std::endl;
+	} else if (data.index() == 3) {
+		std::cout << std::get<std::string>(data) << std::endl;
+	} else if (data.index() == 1){
+		std::cout << std::get<bool>(data) << std::endl;
+	}
 }
 

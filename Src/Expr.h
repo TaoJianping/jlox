@@ -65,6 +65,7 @@ public:
 	Lexeme::Token* m_operator;
 	Expr* right;
 	std::string accept(Visitor<std::string>* visitor) override;
+	InterpreterValueType accept(Visitor<InterpreterValueType>* visitor) override;
 };
 
 
@@ -73,6 +74,7 @@ public:
 	Expr* expression;
 	explicit Grouping(Expr* e) : expression(e) {};
 	std::string accept(Visitor<std::string>* visitor) override;
+	InterpreterValueType accept(Visitor<InterpreterValueType>* visitor) override;
 };
 
 
@@ -82,6 +84,7 @@ public:
 	explicit Literal(Lexeme::Token* v) : value(v) {};
 
 	std::string accept(Visitor<std::string>* visitor) override;
+	InterpreterValueType accept(Visitor<InterpreterValueType>* visitor) override;
 };
 
 
@@ -91,6 +94,7 @@ public:
 	Expr* right;
 	Unary(Lexeme::Token* o, Expr* r) : m_operator(o), right(r) {};
 	std::string accept(Visitor<std::string>* visitor) override;
+	InterpreterValueType accept(Visitor<InterpreterValueType>* visitor) override;
 };
 
 

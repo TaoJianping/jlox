@@ -5,7 +5,7 @@
 #include "Lox.h"
 #include "Scanner.h"
 #include "Parser.h"
-// #include "../Parser.h"
+#include "Interpreter.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -13,68 +13,95 @@
 using namespace std;
 
 bool Lox::hasError = false;
+bool Lox::hadRuntimeError = true;
 
-int Lox::main(int argc,char *argv[]) {
-    if (argc > 1) {
-        std::cout << "Usage: jlox [script]";
-        exit(64);
-    } else if (argc == 1) {
-        runFile(argv[0]);
-    } else {
-        runPrompt();
-    }
+int Lox::main(int argc, char* argv[])
+{
+	if (argc > 1)
+	{
+		std::cout << "Usage: jlox [script]";
+		exit(64);
+	}
+	else if (argc == 1)
+	{
+		runFile(argv[0]);
+	}
+	else
+	{
+		runPrompt();
+	}
 
-    return 0;
+	return 0;
 }
 
-void Lox::runFile(string const & path) {
-    std::ifstream file;
-    file.open(path);
-    if (file.is_open()) {
-        std::stringstream buffer;
-        buffer << file.rdbuf();
-        std::string fileContent(buffer.str());
-        run(fileContent);
-    }
+void Lox::runFile(string const& path)
+{
+	std::ifstream file;
+	file.open(path);
+	if (file.is_open())
+	{
+		std::stringstream buffer;
+		buffer << file.rdbuf();
+		std::string fileContent(buffer.str());
+		run(fileContent);
+	}
 }
 
-void Lox::error(int line, std::string message) {
-    Lox::report(line, "", message);
+void Lox::error(int line, std::string message)
+{
+	Lox::report(line, "", message);
 }
 
-void Lox::report(int line, string const& where  , string const& messages) {
-    std::cout <<  "[line " <<  line << "] Error" + where + ": " + messages << endl;
-    Lox::hasError = true;
+void Lox::report(int line, string const& where, string const& messages)
+{
+	std::cout << "[line " << line << "] Error" + where + ": " + messages << endl;
+	Lox::hasError = true;
 }
 
 /*
  * 教程里面是直接在终端运行，类似于直接打开Python，跳出来终端
  * 我就暂时略过
  * */
-void Lox::runPrompt() {
-    std::cout << "> " << std::endl;
-    std::string test = "var language = \"lox\";";
-    run(test);
+void Lox::runPrompt()
+{
+	std::cout << "> " << std::endl;
+	std::string test = "var language = \"lox\";";
+	run(test);
 }
 
-void Lox::run(string const &source) {
-    auto scanner = Lexer::Scanner(source);
-    auto tokens = scanner.scanTokens();
-    auto parser = new Parser(tokens);
-    Expr* expr = parser->parse();
-    for (auto t: tokens) {
-        t->toString();
-    }
-    if (Lox::hasError) {
-        exit(65);
-    }
+void Lox::run(string const& source)
+{
+	auto scanner = Lexer::Scanner(source);
+	auto tokens = scanner.scanTokens();
+	auto parser = new Parser(tokens);
+	Expr* expr = parser->parse();
+	auto interpreter = Interpreter();
+	interpreter.interpret(expr);
+	if (Lox::hasError)
+	{
+		exit(65);
+	}
+	if (Lox::hadRuntimeError)
+	{
+		exit(70);
+	}
 }
 
 void Lox::error(const Lexeme::Token* token, const std::string& message)
 {
-    if (token->getType() == Lexeme::TokenType::END_OF_FILE) {
-        Lox::report(token->getLine(), " at end", message);
-    } else {
-        Lox::report(token->getLine(), " at" + token->getLexeme(), message);
-    }
+	if (token->getType() == Lexeme::TokenType::END_OF_FILE)
+	{
+		Lox::report(token->getLine(), " at end", message);
+	}
+	else
+	{
+		Lox::report(token->getLine(), " at" + token->getLexeme(), message);
+	}
+}
+
+void Lox::runtimeError(RunTimeException exception)
+{
+	std::cout << exception.what() << std::endl;
+	std::cout << "[Line: " << exception.getLine() << "]" << std::endl;
+	Lox::hadRuntimeError = true;
 }
