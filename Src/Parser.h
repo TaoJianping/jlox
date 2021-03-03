@@ -10,14 +10,26 @@
 
 #include "Token.h"
 #include "Expr.h"
+#include "Stmt.h"
+
+using Lexeme::Token;
+using Lexeme::TokenType;
+using std::vector;
+
+//program        → statement* EOF ;
+//
+//statement      → exprStmt
+//				| printStmt ;
+//
+//exprStmt       → expression ";" ;
+//printStmt      → "print" expression ";" ;
+
 
 class ParseException : std::exception {
 };
 
 
 class Parser {
-	using Token = Lexeme::Token;
-	using TokenType = Lexeme::TokenType;
 private:
 	std::vector<Lexeme::Token *> tokens;
 	int current;
@@ -35,6 +47,12 @@ private:
 	Expr* unary();
 
 	Expr* primary();
+
+	Stmt* statement();
+
+	Stmt* expressionStatement();
+
+	Stmt* printStatement();
 
 	Token* consume(TokenType, const std::string &);
 
@@ -56,7 +74,7 @@ private:
 
 
 public:
-	Expr *parse();
+	vector<Stmt*> parse();
 
 	explicit Parser(const std::vector<Token *> &ts) {
 		tokens = ts;

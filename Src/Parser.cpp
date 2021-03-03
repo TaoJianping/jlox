@@ -17,15 +17,21 @@
 //primary     -> NUMBER | STRING | "true" | "false" | "nil"
 //					| "(" expression ")" ;
 
-Expr* Parser::parse()
+vector<Stmt*> Parser::parse()
 {
+	vector<Stmt*> statements;
 	try
 	{
-		return this->expression();
+		while (!isAtEnd())
+		{
+			statements.push_back(statement());
+		}
+
+		return statements;
 	}
-	catch (ParseException pe)
+	catch (ParseException& pe)
 	{
-		return nullptr;
+		return statements;
 	}
 }
 
@@ -212,5 +218,37 @@ bool Parser::match(const std::vector<TokenType>& types)
 	}
 	return false;
 }
+
+Stmt* Parser::statement()
+{
+	if (this->match(TokenType::PRINT))
+		return this->printStatement();
+
+	return this->expressionStatement();
+}
+
+/*
+ * printStmt -> "print" expression ";" ;
+ * */
+Stmt* Parser::printStatement()
+{
+	Expr* value = this->expression();
+	this->consume(TokenType::SEMICOLON, "Expect ';' after value.");
+
+	return new Print(value);
+}
+
+/*
+ * exprStmt -> expression ";" ;
+ * */
+Stmt* Parser::expressionStatement()
+{
+	Expr* value = this->expression();
+	this->consume(TokenType::SEMICOLON, "Expect ';' after value.");
+
+	return new Expression(value);
+}
+
+
 
 

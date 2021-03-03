@@ -173,3 +173,24 @@ void Interpreter::print(const InterpreterValueType& data)
 	}
 }
 
+void Interpreter::visit(const Expression* expr)
+{
+	this->evaluate(expr->expression);
+}
+
+void Interpreter::visit(const Print* expr)
+{
+	InterpreterValueType value = this->evaluate(expr->expression);
+	this->print(value);
+}
+
+void Interpreter::visit(const Var* expr)
+{
+
+}
+
+void Interpreter::evaluate(Stmt* expr)
+{
+	expr->accept(this);
+}
+
