@@ -74,9 +74,9 @@ void Lox::run(string const& source)
 	auto scanner = Lexer::Scanner(source);
 	auto tokens = scanner.scanTokens();
 	auto parser = new Parser(tokens);
-	Expr* expr = parser->parse();
+	auto statements = parser->parse();
 	auto interpreter = Interpreter();
-	interpreter.interpret(expr);
+	interpreter.interpret(statements);
 	if (Lox::hasError)
 	{
 		exit(65);

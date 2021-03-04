@@ -117,7 +117,6 @@ bool Interpreter::isEqual(const InterpreterValueType& a, const InterpreterValueT
 	return a == b;
 }
 
-
 bool Interpreter::isTruthy(InterpreterValueType _object)
 {
 	if (_object.index() == 0)
@@ -164,12 +163,25 @@ void Interpreter::checkNumberOperands(Lexeme::Token* _operator, const Interprete
 
 void Interpreter::print(const InterpreterValueType& data)
 {
-	if (data.index() == 2) {
+	if (data.index() == 2)
+	{
 		std::cout << std::get<double>(data) << std::endl;
-	} else if (data.index() == 3) {
+	}
+	else if (data.index() == 3)
+	{
 		std::cout << std::get<std::string>(data) << std::endl;
-	} else if (data.index() == 1){
-		std::cout << std::get<bool>(data) << std::endl;
+	}
+	else if (data.index() == 1)
+	{
+		auto v = std::get<bool>(data);
+		if (v)
+		{
+			std::cout << "true" << std::endl;
+		}
+		else
+		{
+			std::cout << "false" << std::endl;
+		}
 	}
 }
 
@@ -189,8 +201,23 @@ void Interpreter::visit(const Var* expr)
 
 }
 
-void Interpreter::evaluate(Stmt* expr)
+void Interpreter::execute(Stmt* expr)
 {
 	expr->accept(this);
+}
+
+void Interpreter::interpret(const vector<Stmt*>& statements)
+{
+	try
+	{
+		for (auto statement : statements)
+		{
+			this->execute(statement);
+		}
+	}
+	catch (RunTimeException& exception)
+	{
+		Lox::runtimeError(exception);
+	}
 }
 

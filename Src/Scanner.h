@@ -59,6 +59,8 @@ namespace Lexer
 
 		void addToken(TokenType tt, std::nullptr_t literal);
 
+		void addToken(TokenType tt, bool literal);
+
 		bool match(char c);
 
 		char peek();

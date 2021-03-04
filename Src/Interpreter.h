@@ -13,7 +13,7 @@ class Interpreter : public Visitor<InterpreterValueType>, public StmtVisitor<voi
 private:
 	void print(const InterpreterValueType& data);
 	InterpreterValueType evaluate(Expr* expr);
-	void evaluate(Stmt* expr);
+	void execute(Stmt* expr);
 	bool isTruthy(InterpreterValueType object);
 	bool isEqual(const InterpreterValueType& a, const InterpreterValueType& b);
 	void checkNumberOperand(Lexeme::Token* _operator, const InterpreterValueType& right);
@@ -29,6 +29,7 @@ public:
 	void visit(const Var *expr) override;
 
 	void interpret(Expr* expr);
+	void interpret(const vector<Stmt*>& statements);
 };
 
 

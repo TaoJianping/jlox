@@ -121,12 +121,25 @@ char Lexer::Scanner::advance()
 
 void Lexer::Scanner::addToken(TokenType tt)
 {
-	addToken(tt, nullptr);
+	if (tt == TokenType::TRUE || tt == TokenType::FALSE)
+	{
+		addToken(tt, tt == TokenType::TRUE);
+	}
+	else
+	{
+		addToken(tt, nullptr);
+	}
+}
+
+void Lexer::Scanner::addToken(Lexeme::TokenType type, bool literal)
+{
+	string text = source.substr(start, (current - start));
+	auto t = new Token(type, text, literal, line);
+	tokens.push_back(t);
 }
 
 void Lexer::Scanner::addToken(TokenType type, string literal)
 {
-	// Todo
 	string text = source.substr(start, (current - start));
 	auto t = new Token(type, text, literal, line);
 	tokens.push_back(t);
@@ -214,9 +227,10 @@ char Lexer::Scanner::peekNext()
 
 void Lexer::Scanner::identifier()
 {
-	while (isalnum(peek()) && peek() != ' ') advance();
+	while ((isalnum(peek()) && peek() != ' '))
+		advance();
 
-	string text = source.substr(start, current);
+	string text = source.substr(start, current - start);
 	TokenType t;
 	if (KEYWORDS.count(text) == 0)
 	{
@@ -228,3 +242,4 @@ void Lexer::Scanner::identifier()
 	}
 	addToken(t);
 }
+

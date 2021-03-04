@@ -51,7 +51,7 @@ public:
 
 	explicit Block(vector<Stmt*> statements);
 
-	void accept(StmtVisitor<void>* visitor) override;
+//	void accept(StmtVisitor<void>* visitor) override;
 };
 
 
