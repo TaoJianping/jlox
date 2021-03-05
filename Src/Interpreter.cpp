@@ -183,6 +183,10 @@ void Interpreter::print(const InterpreterValueType& data)
 			std::cout << "false" << std::endl;
 		}
 	}
+	else if (data.index() == 0)
+	{
+		std::cout << "nil" << std::endl;
+	}
 }
 
 void Interpreter::visit(const Expression* expr)
