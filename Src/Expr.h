@@ -40,6 +40,8 @@ class This;
 class Variable;
 
 using InterpreterValueType = std::variant<std::monostate, bool, double, std::string>;
+using Lexeme::Token;
+using Lexeme::TokenType;
 
 template <typename T>
 class Visitor {
@@ -48,6 +50,7 @@ public:
 	virtual T visit(const Grouping* expr) = 0;
 	virtual T visit(const Literal* expr) = 0;
 	virtual T visit(const Unary* expr) = 0;
+	virtual T visit(const Variable* expr) = 0;
 };
 
 
@@ -93,6 +96,16 @@ public:
 	Lexeme::Token* m_operator;
 	Expr* right;
 	Unary(Lexeme::Token* o, Expr* r) : m_operator(o), right(r) {};
+	std::string accept(Visitor<std::string>* visitor) override;
+	InterpreterValueType accept(Visitor<InterpreterValueType>* visitor) override;
+};
+
+
+class Variable : public Expr
+{
+public:
+	Token* name;
+	explicit Variable(Token* token);
 	std::string accept(Visitor<std::string>* visitor) override;
 	InterpreterValueType accept(Visitor<InterpreterValueType>* visitor) override;
 };

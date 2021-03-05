@@ -43,3 +43,23 @@ InterpreterValueType Binary::accept(Visitor<InterpreterValueType>* visitor)
 {
 	return visitor->visit(this);
 }
+
+Variable::Variable(Token* token) : name(token)
+{
+
+}
+
+std::string Variable::accept(Visitor<std::string>* visitor)
+{
+	return std::__cxx11::string();
+}
+
+InterpreterValueType Variable::accept(Visitor<InterpreterValueType>* visitor)
+{
+	return visitor->visit(this);
+}
+
+//std::string Variable::accept(Visitor<std::string>* visitor)
+//{
+//	return visitor->visit(this);
+//}

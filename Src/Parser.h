@@ -24,6 +24,18 @@ using std::vector;
 //exprStmt       → expression ";" ;
 //printStmt      → "print" expression ";" ;
 
+//program        → declaration* EOF ;
+//
+//declaration    → varDecl
+//               | statement ;
+//
+//statement      → exprStmt
+//               | printStmt ;
+//
+//varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
+
+
+
 
 class ParseException : std::exception {
 };
@@ -50,6 +62,10 @@ private:
 
 	Stmt* statement();
 
+	Stmt* declaration();
+
+	Stmt* varDeclaration();
+
 	Stmt* expressionStatement();
 
 	Stmt* printStatement();
@@ -72,6 +88,7 @@ private:
 
 	Token* previous();
 
+	void synchronize();
 
 public:
 	vector<Stmt*> parse();

@@ -198,7 +198,13 @@ void Interpreter::visit(const Print* expr)
 
 void Interpreter::visit(const Var* expr)
 {
-
+	InterpreterValueType value = std::monostate();
+	if (expr->initializer != nullptr)
+	{
+		value = this->evaluate(expr->initializer);
+	}
+	environment.define(expr->name->getLexeme(), value);
+	return;
 }
 
 void Interpreter::execute(Stmt* expr)
@@ -219,5 +225,10 @@ void Interpreter::interpret(const vector<Stmt*>& statements)
 	{
 		Lox::runtimeError(exception);
 	}
+}
+
+InterpreterValueType Interpreter::visit(const Variable* expr)
+{
+	return this->environment.get(expr->name);
 }
 

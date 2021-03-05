@@ -50,3 +50,8 @@ std::string AstPrinter::parenthesize(const std::string& name, const std::vector<
 
 	return res;
 }
+
+std::string AstPrinter::visit(const Variable*)
+{
+	return std::__cxx11::string();
+}

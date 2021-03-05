@@ -20,6 +20,7 @@ public:
 	std::string visit(const Binary *) override;
 	std::string visit(const Grouping *) override;
 	std::string visit(const Literal *) override;
+	std::string visit(const Variable *) override;
 
 	std::string parenthesize(const std::string& name, const std::vector<Expr*>& exprList);
 };

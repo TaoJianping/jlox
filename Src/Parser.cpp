@@ -24,7 +24,7 @@ vector<Stmt*> Parser::parse()
 	{
 		while (!isAtEnd())
 		{
-			statements.push_back(statement());
+			statements.push_back(declaration());
 		}
 
 		return statements;
@@ -138,9 +138,14 @@ Expr* Parser::primary()
 	if (match(TokenType::NIL))
 		return new Literal(this->previous());
 
-	if (match({ TokenType::STRING, TokenType::NUMBER}))
+	if (match({ TokenType::STRING, TokenType::NUMBER }))
 	{
 		return new Literal(this->previous());
+	}
+
+	if (this->match(TokenType::IDENTIFIER))
+	{
+		return new Variable(previous());
 	}
 
 	if (match(TokenType::LEFT_PAREN))
@@ -247,6 +252,58 @@ Stmt* Parser::expressionStatement()
 	this->consume(TokenType::SEMICOLON, "Expect ';' after value.");
 
 	return new Expression(value);
+}
+
+Stmt* Parser::declaration()
+{
+	try
+	{
+		if (this->match(TokenType::VAR))
+			return varDeclaration();
+		return statement();
+	}
+	catch (ParseException& pe)
+	{
+		this->synchronize();
+		return nullptr;
+	}
+}
+
+Stmt* Parser::varDeclaration()
+{
+	Token* name = this->consume(Lexeme::TokenType::IDENTIFIER, "Expect variable name.");
+	Expr* initializer = nullptr;
+	if (this->match(TokenType::EQUAL))
+	{
+		initializer = this->expression();
+	}
+
+	this->consume(TokenType::SEMICOLON, "Expect ';' after variable declaration.");
+	return new Var(name, initializer);
+}
+
+void Parser::synchronize()
+{
+	this->advance();
+
+	while (!this->isAtEnd())
+	{
+		if (previous()->getType() == TokenType::SEMICOLON)
+			return;
+		switch (peek()->getType())
+		{
+			case TokenType::CLASS:
+			case TokenType::FUN:
+			case TokenType::VAR:
+			case TokenType::FOR:
+			case TokenType::IF:
+			case TokenType::WHILE:
+			case TokenType::PRINT:
+			case TokenType::RETURN:
+				return;
+		}
+		this->advance();
+	}
 }
 
 
