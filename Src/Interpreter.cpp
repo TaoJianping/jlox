@@ -207,8 +207,7 @@ void Interpreter::visit(const Var* expr)
 	{
 		value = this->evaluate(expr->initializer);
 	}
-	environment.define(expr->name->getLexeme(), value);
-	return;
+	environment->define(expr->name->getLexeme(), value);
 }
 
 void Interpreter::execute(Stmt* expr)
@@ -233,6 +232,41 @@ void Interpreter::interpret(const vector<Stmt*>& statements)
 
 InterpreterValueType Interpreter::visit(const Variable* expr)
 {
-	return this->environment.get(expr->name);
+	return this->environment->get(expr->name);
+}
+
+InterpreterValueType Interpreter::visit(const Assign* expr)
+{
+	InterpreterValueType value = this->evaluate(expr->value);
+	this->environment->assign(expr->name, value);
+	return value;
+}
+
+void Interpreter::visit(const Block* expr)
+{
+	auto newEnvironment = new Environment(this->environment);
+	this->executeBlock(expr->statements, newEnvironment);
+	delete newEnvironment;
+}
+
+void Interpreter::executeBlock(vector<Stmt*> statements, Environment* env)
+{
+	auto previousEnv = this->environment;
+	try
+	{
+		this->environment = env;
+		for (auto & statement : statements)
+		{
+			this->execute(statement);
+		}
+		this->environment = previousEnv;
+	}
+	catch (RunTimeException& exception)
+	{
+		Lox::runtimeError(exception);
+		std::cout << "Found Block Fault" << std::endl;
+		this->environment = previousEnv;
+	}
+
 }
 

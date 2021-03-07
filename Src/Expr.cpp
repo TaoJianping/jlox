@@ -51,7 +51,7 @@ Variable::Variable(Token* token) : name(token)
 
 std::string Variable::accept(Visitor<std::string>* visitor)
 {
-	return std::__cxx11::string();
+	return std::string();
 }
 
 InterpreterValueType Variable::accept(Visitor<InterpreterValueType>* visitor)
@@ -63,3 +63,17 @@ InterpreterValueType Variable::accept(Visitor<InterpreterValueType>* visitor)
 //{
 //	return visitor->visit(this);
 //}
+Assign::Assign(Token* name, Expr* value): name(name), value(value)
+{
+
+}
+
+InterpreterValueType Assign::accept(Visitor<InterpreterValueType>* visitor)
+{
+	return visitor->visit(this);
+}
+
+std::string Assign::accept(Visitor<std::string>* visitor)
+{
+	return std::string();
+}

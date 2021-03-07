@@ -48,6 +48,8 @@ private:
 
 	Expr* expression();
 
+	Expr* assignment();
+
 	Expr* equality();
 
 	Expr* comparison();
@@ -61,6 +63,8 @@ private:
 	Expr* primary();
 
 	Stmt* statement();
+
+	vector<Stmt*> block();
 
 	Stmt* declaration();
 

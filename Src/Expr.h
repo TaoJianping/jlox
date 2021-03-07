@@ -51,6 +51,7 @@ public:
 	virtual T visit(const Literal* expr) = 0;
 	virtual T visit(const Unary* expr) = 0;
 	virtual T visit(const Variable* expr) = 0;
+	virtual T visit(const Assign* expr) = 0;
 };
 
 
@@ -106,6 +107,17 @@ class Variable : public Expr
 public:
 	Token* name;
 	explicit Variable(Token* token);
+	std::string accept(Visitor<std::string>* visitor) override;
+	InterpreterValueType accept(Visitor<InterpreterValueType>* visitor) override;
+};
+
+
+class Assign : public Expr {
+public:
+	Lexeme::Token* name;
+	Expr* value;
+
+	Assign(Token* name, Expr* value);
 	std::string accept(Visitor<std::string>* visitor) override;
 	InterpreterValueType accept(Visitor<InterpreterValueType>* visitor) override;
 };

@@ -9,10 +9,10 @@ Block::Block(vector<Stmt*> statements) : statements(statements)
 
 }
 
-//void Block::accept(StmtVisitor<void>* visitor)
-//{
-//	visitor->visit(this);
-//}
+void Block::accept(StmtVisitor<void>* visitor)
+{
+	visitor->visit(this);
+}
 
 Expression::Expression(Expr* expression) : expression(expression)
 {

@@ -27,7 +27,7 @@ template<typename T>
 class StmtVisitor
 {
 public:
-//	virtual T visit(const Block* expr) = 0;
+	virtual T visit(const Block* expr) = 0;
 
 	virtual T visit(const Expression* expr) = 0;
 
@@ -51,7 +51,7 @@ public:
 
 	explicit Block(vector<Stmt*> statements);
 
-//	void accept(StmtVisitor<void>* visitor) override;
+	void accept(StmtVisitor<void>* visitor) override;
 };
 
 

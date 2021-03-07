@@ -37,7 +37,8 @@ vector<Stmt*> Parser::parse()
 
 Expr* Parser::expression()
 {
-	return equality();
+//	return equality();
+	return assignment();
 }
 
 /*
@@ -229,6 +230,9 @@ Stmt* Parser::statement()
 	if (this->match(TokenType::PRINT))
 		return this->printStatement();
 
+	if (this->match(TokenType::LEFT_BRACE))
+		return new Block(block());
+
 	return this->expressionStatement();
 }
 
@@ -304,6 +308,40 @@ void Parser::synchronize()
 		}
 		this->advance();
 	}
+}
+
+Expr* Parser::assignment()
+{
+	Expr* expr = this->equality();
+	if (this->match(TokenType::EQUAL))
+	{
+		Token* equals = this->previous();
+		Expr* value = this->assignment();
+
+		auto castExpr = dynamic_cast<Variable*>(expr);
+		if (castExpr != nullptr)
+		{
+			Token* name = castExpr->name;
+			return new Assign(name, value);
+		}
+
+		throw this->error(equals, "Invalid assignment target.");
+	}
+
+	return expr;
+}
+
+vector<Stmt*> Parser::block()
+{
+	vector<Stmt*> statements;
+
+	while (!this->check(TokenType::RIGHT_BRACE) && !this->isAtEnd())
+	{
+		statements.push_back(this->declaration());
+	}
+
+	this->consume(TokenType::RIGHT_BRACE, "Expect '}' after block.");
+	return statements;
 }
 
 

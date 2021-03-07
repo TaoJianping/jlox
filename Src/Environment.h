@@ -21,9 +21,14 @@ class Environment
 {
 private:
 	unordered_map<string, InterpreterValueType> values;
+	Environment* enclosing;
 public:
+	Environment();
+	explicit Environment(Environment* enclosing);
+
 	void define(const string& name, InterpreterValueType value);
 	InterpreterValueType get(Token* name);
+	void assign(Token* name, InterpreterValueType value);
 };
 
 
