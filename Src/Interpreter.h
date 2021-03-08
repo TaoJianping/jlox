@@ -34,6 +34,7 @@ public:
 	void visit(const Expression *expr) override;
 	void visit(const Print *expr) override;
 	void visit(const Var *expr) override;
+	void visit(const If *expr) override;
 
 	void interpret(Expr* expr);
 	void interpret(const vector<Stmt*>& statements);

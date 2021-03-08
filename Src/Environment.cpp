@@ -27,7 +27,7 @@ InterpreterValueType Environment::get(Token* name)
 
 void Environment::assign(Token* name, InterpreterValueType value)
 {
-	if (this->values.contains(name->getLexeme()))
+	if (this->values.count(name->getLexeme()))
 	{
 		values[name->getLexeme()] = value;
 		return;

@@ -1,0 +1,14 @@
+var a = true;
+
+if (a)
+{
+    a = false;
+    print 123;
+}
+else
+{
+    print 345;
+}
+
+
+print a;

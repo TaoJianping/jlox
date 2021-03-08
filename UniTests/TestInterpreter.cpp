@@ -11,3 +11,7 @@ TEST(testInterpreter, test1) {
 	lox.runFile("../../resource/test/test.txt");
 }
 
+TEST(testInterpreter, testIF) {
+	auto lox = Lox();
+	lox.runFile("../../resource/test/testIf.txt");
+}

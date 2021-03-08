@@ -270,3 +270,12 @@ void Interpreter::executeBlock(vector<Stmt*> statements, Environment* env)
 
 }
 
+void Interpreter::visit(const If* expr)
+{
+	if (isTruthy(this->evaluate(expr->condition))) {
+		this->execute(expr->thenBranch);
+	} else if (expr->elseBranch != nullptr) {
+		this->execute(expr->elseBranch);
+	}
+}
+

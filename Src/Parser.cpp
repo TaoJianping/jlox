@@ -227,6 +227,9 @@ bool Parser::match(const std::vector<TokenType>& types)
 
 Stmt* Parser::statement()
 {
+	if (this->match(TokenType::IF))
+		return this->ifStatement();
+
 	if (this->match(TokenType::PRINT))
 		return this->printStatement();
 
@@ -342,6 +345,22 @@ vector<Stmt*> Parser::block()
 
 	this->consume(TokenType::RIGHT_BRACE, "Expect '}' after block.");
 	return statements;
+}
+
+Stmt* Parser::ifStatement()
+{
+	this->consume(TokenType::LEFT_PAREN, "Expect '(' after 'if'.");
+	Expr* condition = this->expression();
+	this->consume(TokenType::RIGHT_PAREN, "Expect '(' after 'if'.");
+
+	Stmt* thenBranch = this->statement();
+	Stmt* elseBranch = nullptr;
+	if (this->match(TokenType::ELSE))
+	{
+		elseBranch = this->statement();
+	}
+
+	return new If(condition, thenBranch, elseBranch);
 }
 
 

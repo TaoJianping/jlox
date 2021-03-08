@@ -23,6 +23,8 @@ class Print;
 
 class Var;
 
+class If;
+
 template<typename T>
 class StmtVisitor
 {
@@ -34,6 +36,8 @@ public:
 	virtual T visit(const Print* expr) = 0;
 
 	virtual T visit(const Var* expr) = 0;
+
+	virtual T visit(const If* expr) = 0;
 };
 
 
@@ -85,6 +89,18 @@ public:
 
 	Var(Token* name, Expr* initializer);
 
+	void accept(StmtVisitor<void>* visitor) override;
+};
+
+
+class If : public Stmt
+{
+public:
+	Expr* condition;
+	Stmt* thenBranch;
+	Stmt* elseBranch;
+
+	If(Expr* condition, Stmt* thenB, Stmt* elseB);
 	void accept(StmtVisitor<void>* visitor) override;
 };
 

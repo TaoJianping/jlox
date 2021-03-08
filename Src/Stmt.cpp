@@ -43,3 +43,13 @@ void Var::accept(StmtVisitor<void>* visitor)
 {
 	visitor->visit(this);
 }
+
+If::If(Expr* condition, Stmt* thenB, Stmt* elseB): condition(condition), thenBranch(thenB), elseBranch(elseB)
+{
+
+}
+
+void If::accept(StmtVisitor<void>* visitor)
+{
+	visitor->visit(this);
+}

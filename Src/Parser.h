@@ -74,6 +74,8 @@ private:
 
 	Stmt* printStatement();
 
+	Stmt* ifStatement();
+
 	Token* consume(TokenType, const std::string &);
 
 	ParseException error(const Token* token, const std::string &);
