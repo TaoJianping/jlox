@@ -77,3 +77,18 @@ std::string Assign::accept(Visitor<std::string>* visitor)
 {
 	return std::string();
 }
+
+Logical::Logical(Expr* left, Token* _operator, Expr* right): left(left), _operator(_operator), right(right)
+{
+
+}
+
+std::string Logical::accept(Visitor<std::string>* visitor)
+{
+	return visitor->visit(this);
+}
+
+InterpreterValueType Logical::accept(Visitor<InterpreterValueType>* visitor)
+{
+	return visitor->visit(this);
+}

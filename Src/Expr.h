@@ -52,6 +52,7 @@ public:
 	virtual T visit(const Unary* expr) = 0;
 	virtual T visit(const Variable* expr) = 0;
 	virtual T visit(const Assign* expr) = 0;
+	virtual T visit(const Logical* expr) = 0;
 };
 
 
@@ -122,6 +123,18 @@ public:
 	InterpreterValueType accept(Visitor<InterpreterValueType>* visitor) override;
 };
 
+
+class Logical : public Expr
+{
+public:
+	Expr* left;
+	Token* _operator;
+	Expr* right;
+
+	Logical(Expr* left, Token* _operator, Expr* right);
+	std::string accept(Visitor<std::string>* visitor) override;
+	InterpreterValueType accept(Visitor<InterpreterValueType>* visitor) override;
+};
 
 //class Ternary : public Expr {
 //private:

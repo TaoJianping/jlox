@@ -299,15 +299,15 @@ void Parser::synchronize()
 			return;
 		switch (peek()->getType())
 		{
-			case TokenType::CLASS:
-			case TokenType::FUN:
-			case TokenType::VAR:
-			case TokenType::FOR:
-			case TokenType::IF:
-			case TokenType::WHILE:
-			case TokenType::PRINT:
-			case TokenType::RETURN:
-				return;
+		case TokenType::CLASS:
+		case TokenType::FUN:
+		case TokenType::VAR:
+		case TokenType::FOR:
+		case TokenType::IF:
+		case TokenType::WHILE:
+		case TokenType::PRINT:
+		case TokenType::RETURN:
+			return;
 		}
 		this->advance();
 	}
@@ -315,7 +315,7 @@ void Parser::synchronize()
 
 Expr* Parser::assignment()
 {
-	Expr* expr = this->equality();
+	Expr* expr = this->_or();
 	if (this->match(TokenType::EQUAL))
 	{
 		Token* equals = this->previous();
@@ -361,6 +361,34 @@ Stmt* Parser::ifStatement()
 	}
 
 	return new If(condition, thenBranch, elseBranch);
+}
+
+Expr* Parser::_or()
+{
+	Expr* expr = this->_and();
+
+	while (this->match(TokenType::OR))
+	{
+		Token* _operator = this->previous();
+		Expr* right = this->_and();
+		expr = new Logical(expr, _operator, right);
+	}
+
+	return expr;
+}
+
+Expr* Parser::_and()
+{
+	Expr* expr = this->equality();
+
+	while (this->match(TokenType::AND))
+	{
+		Token* _operator = this->previous();
+		Expr* right = this->equality();
+		expr = new Logical(expr, _operator, right);
+	}
+
+	return expr;
 }
 
 

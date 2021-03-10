@@ -255,7 +255,7 @@ void Interpreter::executeBlock(vector<Stmt*> statements, Environment* env)
 	try
 	{
 		this->environment = env;
-		for (auto & statement : statements)
+		for (auto& statement : statements)
 		{
 			this->execute(statement);
 		}
@@ -272,10 +272,29 @@ void Interpreter::executeBlock(vector<Stmt*> statements, Environment* env)
 
 void Interpreter::visit(const If* expr)
 {
-	if (isTruthy(this->evaluate(expr->condition))) {
+	if (isTruthy(this->evaluate(expr->condition)))
+	{
 		this->execute(expr->thenBranch);
-	} else if (expr->elseBranch != nullptr) {
+	}
+	else if (expr->elseBranch != nullptr)
+	{
 		this->execute(expr->elseBranch);
 	}
+}
+
+InterpreterValueType Interpreter::visit(const Logical* expr)
+{
+	auto left = this->evaluate(expr->left);
+
+	if (expr->_operator->getType() == TokenType::OR)
+	{
+		if (this->isTruthy(left)) return left;
+	}
+	else
+	{
+		if (!this->isTruthy(left)) return left;
+	}
+
+	return this->evaluate(expr->right);
 }
 

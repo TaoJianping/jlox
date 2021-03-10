@@ -1,0 +1,16 @@
+print "hi" or 2; // "hi".
+print nil or "yes"; // "yes".
+
+if (false and true)
+{
+    print 123;
+}
+
+if (true or false)
+{
+    print 345;
+}
+
+if (true and true) {
+    print "go go go";
+}

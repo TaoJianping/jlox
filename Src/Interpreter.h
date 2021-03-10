@@ -29,6 +29,7 @@ public:
 	InterpreterValueType visit(const Binary* expr) override;
 	InterpreterValueType visit(const Variable* expr) override;
 	InterpreterValueType visit(const Assign* expr) override;
+	InterpreterValueType visit(const Logical* expr) override;
 
 	void visit(const Block *expr) override;
 	void visit(const Expression *expr) override;

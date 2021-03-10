@@ -22,6 +22,7 @@ public:
 	std::string visit(const Literal *) override;
 	std::string visit(const Variable *) override;
 	std::string visit(const Assign *expr) override;
+	std::string visit(const Logical *expr) override;
 
 	std::string parenthesize(const std::string& name, const std::vector<Expr*>& exprList);
 };

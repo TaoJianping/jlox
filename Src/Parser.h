@@ -52,6 +52,10 @@ private:
 
 	Expr* equality();
 
+	Expr* _or();
+
+	Expr* _and();
+
 	Expr* comparison();
 
 	Expr* term();
