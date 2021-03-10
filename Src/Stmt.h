@@ -25,6 +25,8 @@ class Var;
 
 class If;
 
+class While;
+
 template<typename T>
 class StmtVisitor
 {
@@ -38,6 +40,8 @@ public:
 	virtual T visit(const Var* expr) = 0;
 
 	virtual T visit(const If* expr) = 0;
+
+	virtual T visit(const While* expr) = 0;
 };
 
 
@@ -101,6 +105,17 @@ public:
 	Stmt* elseBranch;
 
 	If(Expr* condition, Stmt* thenB, Stmt* elseB);
+	void accept(StmtVisitor<void>* visitor) override;
+};
+
+
+class While : public Stmt
+{
+public:
+	Expr* condition;
+	Stmt* body;
+
+	While(Expr* condition, Stmt* body);
 	void accept(StmtVisitor<void>* visitor) override;
 };
 

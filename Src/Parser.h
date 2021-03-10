@@ -78,7 +78,11 @@ private:
 
 	Stmt* printStatement();
 
+	Stmt* whileStatement();
+
 	Stmt* ifStatement();
+
+	Stmt* forStatement();
 
 	Token* consume(TokenType, const std::string &);
 

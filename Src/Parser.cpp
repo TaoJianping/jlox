@@ -227,11 +227,17 @@ bool Parser::match(const std::vector<TokenType>& types)
 
 Stmt* Parser::statement()
 {
+	if (this->match(TokenType::FOR))
+		return this->forStatement();
+
 	if (this->match(TokenType::IF))
 		return this->ifStatement();
 
 	if (this->match(TokenType::PRINT))
 		return this->printStatement();
+
+	if (this->match(TokenType::WHILE))
+		return this->whileStatement();
 
 	if (this->match(TokenType::LEFT_BRACE))
 		return new Block(block());
@@ -389,6 +395,63 @@ Expr* Parser::_and()
 	}
 
 	return expr;
+}
+
+Stmt* Parser::whileStatement()
+{
+	this->consume(TokenType::LEFT_PAREN, "Expect '(' after 'while'.");
+	Expr* condition = this->expression();
+	this->consume(TokenType::RIGHT_PAREN, "Expect ')' after condition.");
+	Stmt* body = this->statement();
+
+	return new While(condition, body);
+}
+
+Stmt* Parser::forStatement()
+{
+	this->consume(TokenType::LEFT_PAREN, "Expect '(' after 'for'.");
+	Stmt* initializer;
+	if (this->match(TokenType::SEMICOLON))
+	{
+		initializer = nullptr;
+	}
+	else if (this->match(TokenType::VAR))
+	{
+		initializer = this->varDeclaration();
+	}
+	else
+	{
+		initializer = this->expressionStatement();
+	}
+
+	Expr* condition = nullptr;
+	if (!this->check(TokenType::SEMICOLON)) {
+		condition = this->expression();
+	}
+	this->consume(TokenType::SEMICOLON, "Expect ';' after loop condition.");
+
+	Expr* increment = nullptr;
+	if (!this->check(TokenType::RIGHT_PAREN)) {
+		increment = this->expression();
+	}
+	this->consume(TokenType::RIGHT_PAREN, "Expect ')' after for clauses.");
+
+	Stmt* body = this->statement();
+	if (increment != nullptr)
+	{
+		body = new Block({body, new Expression(increment)});
+	}
+
+	if (condition == nullptr)
+		condition = new Literal(new Token(TokenType::TRUE, "true", true, -1));
+
+	body = new While(condition, body);
+
+	if (initializer != nullptr) {
+		body = new Block({initializer, body});
+	}
+
+	return body;
 }
 
 

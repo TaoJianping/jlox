@@ -20,3 +20,9 @@ TEST(testInterpreter, testLogical) {
 	auto lox = Lox();
 	lox.runFile("../../resource/test/testLogical.txt");
 }
+
+
+TEST(testInterpreter, testFor) {
+	auto lox = Lox();
+	lox.runFile("../../resource/test/testFor.txt");
+}

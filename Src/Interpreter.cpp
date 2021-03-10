@@ -298,3 +298,10 @@ InterpreterValueType Interpreter::visit(const Logical* expr)
 	return this->evaluate(expr->right);
 }
 
+void Interpreter::visit(const While* expr)
+{
+	while (this->isTruthy(this->evaluate(expr->condition))) {
+		this->execute(expr->body);
+	}
+}
+
