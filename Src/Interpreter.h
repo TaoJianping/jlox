@@ -10,29 +10,29 @@
 #include "Environment.h"
 #include "Type.h"
 
-class Interpreter : public Visitor<InterpreterValueType>, public StmtVisitor<void>
+class Interpreter : public Visitor<LoxType>, public StmtVisitor<void>
 {
 private:
 	Environment* globals = new Environment();
 	Environment* environment = this->globals;
 
-	void print(const InterpreterValueType& data);
-	InterpreterValueType evaluate(Expr* expr);
+	void print(const LoxType& data);
+	LoxType evaluate(Expr* expr);
 	void execute(Stmt* expr);
 	void executeBlock(vector<Stmt*> statements, Environment* env);
-	bool isTruthy(InterpreterValueType object);
-	bool isEqual(const InterpreterValueType& a, const InterpreterValueType& b);
-	void checkNumberOperand(Lexeme::Token* _operator, const InterpreterValueType& right);
-	void checkNumberOperands(Lexeme::Token* _operator, const InterpreterValueType& left, const InterpreterValueType& right);
+	bool isTruthy(LoxType object);
+	bool isEqual(const LoxType& a, const LoxType& b);
+	void checkNumberOperand(Lexeme::Token* _operator, const LoxType& right);
+	void checkNumberOperands(Lexeme::Token* _operator, const LoxType& left, const LoxType& right);
 public:
-	InterpreterValueType visit(const Literal* expr) override;
-	InterpreterValueType visit(const Grouping* expr) override;
-	InterpreterValueType visit(const Unary* expr) override;
-	InterpreterValueType visit(const Binary* expr) override;
-	InterpreterValueType visit(const Variable* expr) override;
-	InterpreterValueType visit(const Assign* expr) override;
-	InterpreterValueType visit(const Logical* expr) override;
-	InterpreterValueType visit(const Call* expr) override;
+	LoxType visit(const Literal* expr) override;
+	LoxType visit(const Grouping* expr) override;
+	LoxType visit(const Unary* expr) override;
+	LoxType visit(const Binary* expr) override;
+	LoxType visit(const Variable* expr) override;
+	LoxType visit(const Assign* expr) override;
+	LoxType visit(const Logical* expr) override;
+	LoxType visit(const Call* expr) override;
 
 	void visit(const Block *expr) override;
 	void visit(const Expression *expr) override;

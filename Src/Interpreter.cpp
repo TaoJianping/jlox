@@ -7,24 +7,25 @@
 #include "RunTimeException.h"
 #include "Lox.h"
 #include "LoxCallable.h"
+#include <sstream>
 
-InterpreterValueType Interpreter::visit(const Literal* expr)
+LoxType Interpreter::visit(const Literal* expr)
 {
 	auto res = expr->value->getLiteral();
 	return res;
 }
 
-InterpreterValueType Interpreter::visit(const Grouping* expr)
+LoxType Interpreter::visit(const Grouping* expr)
 {
 	return this->evaluate(expr->expression);
 }
 
-InterpreterValueType Interpreter::evaluate(Expr* expr)
+LoxType Interpreter::evaluate(Expr* expr)
 {
 	return expr->accept(this);
 }
 
-InterpreterValueType Interpreter::visit(const Unary* expr)
+LoxType Interpreter::visit(const Unary* expr)
 {
 	auto right = this->evaluate(expr->right);
 
@@ -45,7 +46,7 @@ InterpreterValueType Interpreter::visit(const Unary* expr)
 	return nullptr;
 }
 
-InterpreterValueType Interpreter::visit(const Binary* expr)
+LoxType Interpreter::visit(const Binary* expr)
 {
 	auto left = this->evaluate(expr->left);
 	auto right = this->evaluate(expr->right);
@@ -109,7 +110,7 @@ InterpreterValueType Interpreter::visit(const Binary* expr)
 	return nullptr;
 }
 
-bool Interpreter::isEqual(const InterpreterValueType& a, const InterpreterValueType& b)
+bool Interpreter::isEqual(const LoxType& a, const LoxType& b)
 {
 	if (a.index() == 1 && b.index() == 1)
 		return true;
@@ -119,7 +120,7 @@ bool Interpreter::isEqual(const InterpreterValueType& a, const InterpreterValueT
 	return a == b;
 }
 
-bool Interpreter::isTruthy(InterpreterValueType _object)
+bool Interpreter::isTruthy(LoxType _object)
 {
 	if (_object.index() == 0)
 	{
@@ -148,22 +149,22 @@ void Interpreter::interpret(Expr* expr)
 
 }
 
-void Interpreter::checkNumberOperand(Lexeme::Token* _operator, const InterpreterValueType& right)
+void Interpreter::checkNumberOperand(Lexeme::Token* _operator, const LoxType& right)
 {
 	if (right.index() == 2)
 		return;
 	throw RunTimeException("Operand must be a number.", _operator);
 }
 
-void Interpreter::checkNumberOperands(Lexeme::Token* _operator, const InterpreterValueType& left,
-		const InterpreterValueType& right)
+void Interpreter::checkNumberOperands(Lexeme::Token* _operator, const LoxType& left,
+		const LoxType& right)
 {
 	if (right.index() == 2 && left.index() == 2)
 		return;
 	throw RunTimeException("Operand must be a number.", _operator);
 }
 
-void Interpreter::print(const InterpreterValueType& data)
+void Interpreter::print(const LoxType& data)
 {
 	if (data.index() == 2)
 	{
@@ -198,13 +199,13 @@ void Interpreter::visit(const Expression* expr)
 
 void Interpreter::visit(const Print* expr)
 {
-	InterpreterValueType value = this->evaluate(expr->expression);
+	LoxType value = this->evaluate(expr->expression);
 	this->print(value);
 }
 
 void Interpreter::visit(const Var* expr)
 {
-	InterpreterValueType value = std::monostate();
+	LoxType value = std::monostate();
 	if (expr->initializer != nullptr)
 	{
 		value = this->evaluate(expr->initializer);
@@ -232,14 +233,14 @@ void Interpreter::interpret(const vector<Stmt*>& statements)
 	}
 }
 
-InterpreterValueType Interpreter::visit(const Variable* expr)
+LoxType Interpreter::visit(const Variable* expr)
 {
 	return this->environment->get(expr->name);
 }
 
-InterpreterValueType Interpreter::visit(const Assign* expr)
+LoxType Interpreter::visit(const Assign* expr)
 {
-	InterpreterValueType value = this->evaluate(expr->value);
+	LoxType value = this->evaluate(expr->value);
 	this->environment->assign(expr->name, value);
 	return value;
 }
@@ -284,7 +285,7 @@ void Interpreter::visit(const If* expr)
 	}
 }
 
-InterpreterValueType Interpreter::visit(const Logical* expr)
+LoxType Interpreter::visit(const Logical* expr)
 {
 	auto left = this->evaluate(expr->left);
 
@@ -302,25 +303,37 @@ InterpreterValueType Interpreter::visit(const Logical* expr)
 
 void Interpreter::visit(const While* expr)
 {
-	while (this->isTruthy(this->evaluate(expr->condition))) {
+	while (this->isTruthy(this->evaluate(expr->condition)))
+	{
 		this->execute(expr->body);
 	}
 }
 
-InterpreterValueType Interpreter::visit(const Call* expr)
+LoxType Interpreter::visit(const Call* expr)
 {
-	InterpreterValueType callee = this->evaluate(expr->callee);
+	LoxType callee = this->evaluate(expr->callee);
 
-	vector<InterpreterValueType> arguments;
-	for (auto & argument : expr->arguments)
+	vector<LoxType> arguments;
+	for (auto& argument : expr->arguments)
 	{
 		arguments.push_back(this->evaluate(argument));
 	}
 
-//	std::shared_ptr<LoxCallable> function;
-//	LoxCallable* function;
-////	std::get<LoxCallable>(callee);
-//	return function->call(this, arguments);
+	if (callee.index() != (size_t)LoxTypeIndex::Function)
+	{
+		throw RunTimeException("Can only call functions and classes.", expr->paren);
+	}
+
+	LoxCallable* function = std::get<LoxCallable*>(callee);
+	if (arguments.size() != function->arity())
+	{
+		std::ostringstream stringStream;
+		stringStream << "Expected " << function->arity()
+					 << " arguments but got " << arguments.size() << ".";
+		throw RunTimeException(stringStream.str(), expr->paren);
+	}
+
+	return function->call(this, arguments);
 }
 
 Interpreter::Interpreter()

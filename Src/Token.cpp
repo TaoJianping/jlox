@@ -10,7 +10,7 @@ std::string Lexeme::Token::toString()
 	return nullptr;
 }
 
-Lexeme::Token::Token(Lexeme::TokenType t, std::string lexeme, std::variant<std::monostate, bool, double, std::string> ll, int l) :
+Lexeme::Token::Token(Lexeme::TokenType t, std::string lexeme, LoxType ll, int l) :
 		type(t), lexeme(std::move(lexeme)), literal(std::move(ll)), line(l)
 {
 
@@ -21,7 +21,7 @@ Lexeme::TokenType Lexeme::Token::getType() const
 	return this->type;
 }
 
-std::variant<std::monostate, bool, double, std::string> Lexeme::Token::getLiteral() const
+LoxType Lexeme::Token::getLiteral() const
 {
 	return this->literal;
 }

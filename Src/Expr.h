@@ -26,7 +26,7 @@ class Super;
 class This;
 class Variable;
 
-//using InterpreterValueType = std::variant<std::monostate, bool, double, std::string>;
+//using LoxType = std::variant<std::monostate, bool, double, std::string>;
 using Lexeme::Token;
 using Lexeme::TokenType;
 using std::vector;

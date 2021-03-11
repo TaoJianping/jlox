@@ -11,7 +11,7 @@ std::string Literal::accept(Visitor<std::string>* visitor)
 	return visitor->visit(this);
 }
 
-InterpreterValueType Literal::accept(Visitor<InterpreterValueType>* visitor)
+LoxType Literal::accept(Visitor<LoxType>* visitor)
 {
 	return visitor->visit(this);
 }
@@ -21,7 +21,7 @@ std::string Unary::accept(Visitor<std::string>* visitor)
 	return visitor->visit(this);
 }
 
-InterpreterValueType Unary::accept(Visitor<InterpreterValueType>* visitor)
+LoxType Unary::accept(Visitor<LoxType>* visitor)
 {
 	return visitor->visit(this);
 }
@@ -31,7 +31,7 @@ std::string Grouping::accept(Visitor<std::string>* visitor)
 	return visitor->visit(this);
 }
 
-InterpreterValueType Grouping::accept(Visitor<InterpreterValueType>* visitor)
+LoxType Grouping::accept(Visitor<LoxType>* visitor)
 {
 	return visitor->visit(this);
 }
@@ -41,7 +41,7 @@ std::string Binary::accept(Visitor<std::string>* visitor)
 	return visitor->visit(this);
 }
 
-InterpreterValueType Binary::accept(Visitor<InterpreterValueType>* visitor)
+LoxType Binary::accept(Visitor<LoxType>* visitor)
 {
 	return visitor->visit(this);
 }
@@ -56,7 +56,7 @@ std::string Variable::accept(Visitor<std::string>* visitor)
 	return std::string();
 }
 
-InterpreterValueType Variable::accept(Visitor<InterpreterValueType>* visitor)
+LoxType Variable::accept(Visitor<LoxType>* visitor)
 {
 	return visitor->visit(this);
 }
@@ -70,7 +70,7 @@ Assign::Assign(Token* name, Expr* value) : name(name), value(value)
 
 }
 
-InterpreterValueType Assign::accept(Visitor<InterpreterValueType>* visitor)
+LoxType Assign::accept(Visitor<LoxType>* visitor)
 {
 	return visitor->visit(this);
 }
@@ -90,7 +90,7 @@ std::string Logical::accept(Visitor<std::string>* visitor)
 	return visitor->visit(this);
 }
 
-InterpreterValueType Logical::accept(Visitor<InterpreterValueType>* visitor)
+LoxType Logical::accept(Visitor<LoxType>* visitor)
 {
 	return visitor->visit(this);
 }
@@ -101,7 +101,7 @@ Call::Call(Expr* callee, Token* paren, vector<Expr*> arguments) : callee(callee)
 
 }
 
-InterpreterValueType Call::accept(Visitor<InterpreterValueType>* visitor)
+LoxType Call::accept(Visitor<LoxType>* visitor)
 {
 	return visitor->visit(this);
 }

@@ -10,25 +10,25 @@
 #include <variant>
 
 #include "Token.h"
+#include "Type.h"
 
 using std::unordered_map;
 using std::string;
-using InterpreterValueType = std::variant<std::monostate, bool, double, std::string>;
 using Lexeme::Token;
 
 
 class Environment
 {
 private:
-	unordered_map<string, InterpreterValueType> values;
+	unordered_map<string, LoxType> values;
 	Environment* enclosing;
 public:
 	Environment();
 	explicit Environment(Environment* enclosing);
 
-	void define(const string& name, InterpreterValueType value);
-	InterpreterValueType get(Token* name);
-	void assign(Token* name, InterpreterValueType value);
+	void define(const string& name, LoxType value);
+	LoxType get(Token* name);
+	void assign(Token* name, LoxType value);
 };
 
 

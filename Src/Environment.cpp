@@ -3,14 +3,16 @@
 //
 
 #include "Environment.h"
+
+#include <utility>
 #include "RunTimeException.h"
 
-void Environment::define(const string& name, InterpreterValueType value)
+void Environment::define(const string& name, LoxType value)
 {
-	this->values[name] = value;
+	this->values[name] = std::move(value);
 }
 
-InterpreterValueType Environment::get(Token* name)
+LoxType Environment::get(Token* name)
 {
 	if (values.count(name->getLexeme()))
 	{
@@ -25,7 +27,7 @@ InterpreterValueType Environment::get(Token* name)
 	throw RunTimeException("Undefined variable '" + name->getLexeme() + "'.", name);
 }
 
-void Environment::assign(Token* name, InterpreterValueType value)
+void Environment::assign(Token* name, LoxType value)
 {
 	if (this->values.count(name->getLexeme()))
 	{

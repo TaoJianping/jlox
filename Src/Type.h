@@ -13,6 +13,15 @@ class test {
 	virtual int a() = 0;
 };
 
+enum class LoxTypeIndex : size_t
+{
+	Nil,
+	Bool,
+	Number,
+	String,
+	Function,
+};
+
 using LoxType = std::variant<std::monostate, bool, double, std::string, LoxCallable*>;
 
 
