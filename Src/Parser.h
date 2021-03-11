@@ -64,6 +64,10 @@ private:
 
 	Expr* unary();
 
+	Expr* call();
+
+	Expr* finishCall(Expr* callee);
+
 	Expr* primary();
 
 	Stmt* statement();

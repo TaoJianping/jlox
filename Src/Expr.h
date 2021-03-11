@@ -10,20 +10,7 @@
 #include <utility>
 #include <vector>
 #include "Token.h"
-
-
-// expression   → literal
-//              | unary
-//              | binary
-//              | grouping ;
-//
-// literal    → NUMBER | STRING | "false" | "true" | "nil" ;
-// grouping   → "(" expression ")" ;
-// unary      → ( "-" | "!" ) expression ;
-// binary     → expression operator expression ;
-// operator   → "==" | "!=" | "<" | "<=" | ">" | ">="
-//               | "+"  | "-"  | "*" | "/" ;
-
+#include "Type.h"
 
 class Binary;
 class Grouping;
@@ -39,9 +26,10 @@ class Super;
 class This;
 class Variable;
 
-using InterpreterValueType = std::variant<std::monostate, bool, double, std::string>;
+//using InterpreterValueType = std::variant<std::monostate, bool, double, std::string>;
 using Lexeme::Token;
 using Lexeme::TokenType;
+using std::vector;
 
 template <typename T>
 class Visitor {
@@ -53,13 +41,14 @@ public:
 	virtual T visit(const Variable* expr) = 0;
 	virtual T visit(const Assign* expr) = 0;
 	virtual T visit(const Logical* expr) = 0;
+	virtual T visit(const Call* expr) = 0;
 };
 
 
 class Expr {
 public:
 	virtual std::string accept(Visitor<std::string>* visitor) = 0;
-	virtual InterpreterValueType accept(Visitor<InterpreterValueType>* visitor) = 0;
+	virtual LoxType accept(Visitor<LoxType>* visitor) = 0;
 };
 
 
@@ -70,7 +59,20 @@ public:
 	Lexeme::Token* m_operator;
 	Expr* right;
 	std::string accept(Visitor<std::string>* visitor) override;
-	InterpreterValueType accept(Visitor<InterpreterValueType>* visitor) override;
+	LoxType accept(Visitor<LoxType>* visitor) override;
+};
+
+
+class Call : public Expr
+{
+public:
+	Expr* callee;
+	Token* paren;
+	vector<Expr*> arguments;
+
+	Call(Expr* callee, Token* paren, vector<Expr*> arguments);
+	std::string accept(Visitor<std::string>* visitor) override;
+	LoxType accept(Visitor<LoxType>* visitor) override;
 };
 
 
@@ -79,7 +81,7 @@ public:
 	Expr* expression;
 	explicit Grouping(Expr* e) : expression(e) {};
 	std::string accept(Visitor<std::string>* visitor) override;
-	InterpreterValueType accept(Visitor<InterpreterValueType>* visitor) override;
+	LoxType accept(Visitor<LoxType>* visitor) override;
 };
 
 
@@ -89,7 +91,7 @@ public:
 	explicit Literal(Lexeme::Token* v) : value(v) {};
 
 	std::string accept(Visitor<std::string>* visitor) override;
-	InterpreterValueType accept(Visitor<InterpreterValueType>* visitor) override;
+	LoxType accept(Visitor<LoxType>* visitor) override;
 };
 
 
@@ -99,7 +101,7 @@ public:
 	Expr* right;
 	Unary(Lexeme::Token* o, Expr* r) : m_operator(o), right(r) {};
 	std::string accept(Visitor<std::string>* visitor) override;
-	InterpreterValueType accept(Visitor<InterpreterValueType>* visitor) override;
+	LoxType accept(Visitor<LoxType>* visitor) override;
 };
 
 
@@ -109,7 +111,7 @@ public:
 	Token* name;
 	explicit Variable(Token* token);
 	std::string accept(Visitor<std::string>* visitor) override;
-	InterpreterValueType accept(Visitor<InterpreterValueType>* visitor) override;
+	LoxType accept(Visitor<LoxType>* visitor) override;
 };
 
 
@@ -120,7 +122,7 @@ public:
 
 	Assign(Token* name, Expr* value);
 	std::string accept(Visitor<std::string>* visitor) override;
-	InterpreterValueType accept(Visitor<InterpreterValueType>* visitor) override;
+	LoxType accept(Visitor<LoxType>* visitor) override;
 };
 
 
@@ -133,7 +135,7 @@ public:
 
 	Logical(Expr* left, Token* _operator, Expr* right);
 	std::string accept(Visitor<std::string>* visitor) override;
-	InterpreterValueType accept(Visitor<InterpreterValueType>* visitor) override;
+	LoxType accept(Visitor<LoxType>* visitor) override;
 };
 
 //class Ternary : public Expr {

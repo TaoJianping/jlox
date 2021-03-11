@@ -8,11 +8,13 @@
 #include "Expr.h"
 #include "Stmt.h"
 #include "Environment.h"
+#include "Type.h"
 
 class Interpreter : public Visitor<InterpreterValueType>, public StmtVisitor<void>
 {
 private:
-	Environment* environment = new Environment();
+	Environment* globals = new Environment();
+	Environment* environment = this->globals;
 
 	void print(const InterpreterValueType& data);
 	InterpreterValueType evaluate(Expr* expr);
@@ -30,6 +32,7 @@ public:
 	InterpreterValueType visit(const Variable* expr) override;
 	InterpreterValueType visit(const Assign* expr) override;
 	InterpreterValueType visit(const Logical* expr) override;
+	InterpreterValueType visit(const Call* expr) override;
 
 	void visit(const Block *expr) override;
 	void visit(const Expression *expr) override;
@@ -40,6 +43,9 @@ public:
 
 	void interpret(Expr* expr);
 	void interpret(const vector<Stmt*>& statements);
+
+	Interpreter();
+	~Interpreter();
 };
 
 

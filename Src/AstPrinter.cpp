@@ -65,3 +65,8 @@ std::string AstPrinter::visit(const Logical* expr)
 {
 	return std::string();
 }
+
+std::string AstPrinter::visit(const Call* expr)
+{
+	return std::string();
+}

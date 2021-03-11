@@ -7,15 +7,6 @@
 #include "Lox.h"
 #include <utility>
 
-//expression  -> equality ;
-//equality    -> comparison ( ( "!=" | "==" ) comparison )* ;
-//comparison  -> term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
-//term        -> factor ( ( "-" | "+" ) factor )* ;
-//factor      -> unary ( ( "/" | "*" ) unary )* ;
-//unary       -> ( "!" | "-" ) unary
-//					| primary ;
-//primary     -> NUMBER | STRING | "true" | "false" | "nil"
-//					| "(" expression ")" ;
 
 vector<Stmt*> Parser::parse()
 {
@@ -121,7 +112,7 @@ Expr* Parser::unary()
 		return new Unary(_operator, right);
 	}
 
-	return this->primary();
+	return this->call();
 }
 
 /*
@@ -425,13 +416,15 @@ Stmt* Parser::forStatement()
 	}
 
 	Expr* condition = nullptr;
-	if (!this->check(TokenType::SEMICOLON)) {
+	if (!this->check(TokenType::SEMICOLON))
+	{
 		condition = this->expression();
 	}
 	this->consume(TokenType::SEMICOLON, "Expect ';' after loop condition.");
 
 	Expr* increment = nullptr;
-	if (!this->check(TokenType::RIGHT_PAREN)) {
+	if (!this->check(TokenType::RIGHT_PAREN))
+	{
 		increment = this->expression();
 	}
 	this->consume(TokenType::RIGHT_PAREN, "Expect ')' after for clauses.");
@@ -439,7 +432,7 @@ Stmt* Parser::forStatement()
 	Stmt* body = this->statement();
 	if (increment != nullptr)
 	{
-		body = new Block({body, new Expression(increment)});
+		body = new Block({ body, new Expression(increment) });
 	}
 
 	if (condition == nullptr)
@@ -447,11 +440,51 @@ Stmt* Parser::forStatement()
 
 	body = new While(condition, body);
 
-	if (initializer != nullptr) {
-		body = new Block({initializer, body});
+	if (initializer != nullptr)
+	{
+		body = new Block({ initializer, body });
 	}
 
 	return body;
+}
+
+Expr* Parser::call()
+{
+	Expr* expr = this->primary();
+
+	while (true)
+	{
+		if (this->match(TokenType::LEFT_PAREN))
+		{
+			expr = this->finishCall(expr);
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	return expr;
+}
+
+Expr* Parser::finishCall(Expr* callee)
+{
+	vector<Expr*> arguments;
+
+	if (!this->check(TokenType::RIGHT_PAREN))
+	{
+		do
+		{
+			if (arguments.size() >= 255) {
+				this->error(this->peek(), "Can't have more than 255 arguments.");
+			}
+			arguments.push_back(this->expression());
+		} while (this->match(TokenType::COMMA));
+	}
+
+	Token* paren = this->consume(TokenType::RIGHT_PAREN, "Expect ')' after arguments.");
+
+	return new Call(callee,paren, std::move(arguments));
 }
 
 

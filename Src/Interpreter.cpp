@@ -2,9 +2,11 @@
 // Created by tao on 2021/3/1.
 //
 
+#include <memory>
 #include "Interpreter.h"
 #include "RunTimeException.h"
 #include "Lox.h"
+#include "LoxCallable.h"
 
 InterpreterValueType Interpreter::visit(const Literal* expr)
 {
@@ -303,5 +305,31 @@ void Interpreter::visit(const While* expr)
 	while (this->isTruthy(this->evaluate(expr->condition))) {
 		this->execute(expr->body);
 	}
+}
+
+InterpreterValueType Interpreter::visit(const Call* expr)
+{
+	InterpreterValueType callee = this->evaluate(expr->callee);
+
+	vector<InterpreterValueType> arguments;
+	for (auto & argument : expr->arguments)
+	{
+		arguments.push_back(this->evaluate(argument));
+	}
+
+//	std::shared_ptr<LoxCallable> function;
+//	LoxCallable* function;
+////	std::get<LoxCallable>(callee);
+//	return function->call(this, arguments);
+}
+
+Interpreter::Interpreter()
+{
+	this->globals->define("clock", new NativeClockFunction());
+}
+
+Interpreter::~Interpreter()
+{
+	delete this->globals;
 }
 

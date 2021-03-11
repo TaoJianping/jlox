@@ -4,6 +4,8 @@
 
 #include "Expr.h"
 
+#include <utility>
+
 std::string Literal::accept(Visitor<std::string>* visitor)
 {
 	return visitor->visit(this);
@@ -63,7 +65,7 @@ InterpreterValueType Variable::accept(Visitor<InterpreterValueType>* visitor)
 //{
 //	return visitor->visit(this);
 //}
-Assign::Assign(Token* name, Expr* value): name(name), value(value)
+Assign::Assign(Token* name, Expr* value) : name(name), value(value)
 {
 
 }
@@ -78,7 +80,7 @@ std::string Assign::accept(Visitor<std::string>* visitor)
 	return std::string();
 }
 
-Logical::Logical(Expr* left, Token* _operator, Expr* right): left(left), _operator(_operator), right(right)
+Logical::Logical(Expr* left, Token* _operator, Expr* right) : left(left), _operator(_operator), right(right)
 {
 
 }
@@ -89,6 +91,22 @@ std::string Logical::accept(Visitor<std::string>* visitor)
 }
 
 InterpreterValueType Logical::accept(Visitor<InterpreterValueType>* visitor)
+{
+	return visitor->visit(this);
+}
+
+Call::Call(Expr* callee, Token* paren, vector<Expr*> arguments) : callee(callee), paren(paren),
+																  arguments(std::move(arguments))
+{
+
+}
+
+InterpreterValueType Call::accept(Visitor<InterpreterValueType>* visitor)
+{
+	return visitor->visit(this);
+}
+
+std::string Call::accept(Visitor<std::string>* visitor)
 {
 	return visitor->visit(this);
 }
