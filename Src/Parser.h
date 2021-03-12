@@ -15,26 +15,7 @@
 using Lexeme::Token;
 using Lexeme::TokenType;
 using std::vector;
-
-//program        → statement* EOF ;
-//
-//statement      → exprStmt
-//				| printStmt ;
-//
-//exprStmt       → expression ";" ;
-//printStmt      → "print" expression ";" ;
-
-//program        → declaration* EOF ;
-//
-//declaration    → varDecl
-//               | statement ;
-//
-//statement      → exprStmt
-//               | printStmt ;
-//
-//varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
-
-
+using std::string;
 
 
 class ParseException : std::exception {
@@ -80,7 +61,11 @@ private:
 
 	Stmt* expressionStatement();
 
+	Function* function(string kind);
+
 	Stmt* printStatement();
+
+	Stmt* returnStatement();
 
 	Stmt* whileStatement();
 

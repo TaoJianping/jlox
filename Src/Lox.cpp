@@ -13,7 +13,7 @@
 using namespace std;
 
 bool Lox::hasError = false;
-bool Lox::hadRuntimeError = true;
+bool Lox::hadRuntimeError = false;
 
 int Lox::main(int argc, char* argv[])
 {

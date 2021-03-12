@@ -26,3 +26,13 @@ TEST(testInterpreter, testFor) {
 	auto lox = Lox();
 	lox.runFile("../../resource/test/testFor.txt");
 }
+
+TEST(testInterpreter, testFun) {
+	auto lox = Lox();
+	lox.runFile("../../resource/test/testFunction.txt");
+}
+
+TEST(testInterpreter, testReturn) {
+	auto lox = Lox();
+	lox.runFile("../../resource/test/testReturn.txt");
+}

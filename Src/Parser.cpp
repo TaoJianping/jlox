@@ -224,6 +224,9 @@ Stmt* Parser::statement()
 	if (this->match(TokenType::IF))
 		return this->ifStatement();
 
+	if (this->match(TokenType::RETURN))
+		return this->returnStatement();
+
 	if (this->match(TokenType::PRINT))
 		return this->printStatement();
 
@@ -262,8 +265,10 @@ Stmt* Parser::declaration()
 {
 	try
 	{
+		if (this->match(TokenType::FUN))
+			return this->function("function");
 		if (this->match(TokenType::VAR))
-			return varDeclaration();
+			return this->varDeclaration();
 		return statement();
 	}
 	catch (ParseException& pe)
@@ -485,6 +490,41 @@ Expr* Parser::finishCall(Expr* callee)
 	Token* paren = this->consume(TokenType::RIGHT_PAREN, "Expect ')' after arguments.");
 
 	return new Call(callee,paren, std::move(arguments));
+}
+
+Function* Parser::function(string kind)
+{
+	Token* name = this->consume(TokenType::IDENTIFIER, "Expect" + kind + " name.");
+	this->consume(TokenType::LEFT_PAREN, "Expect '(' after " + kind + " name.");
+
+	vector<Token*> parameters{};
+	if (!this->check(TokenType::RIGHT_PAREN))
+	{
+		do
+		{
+			if (parameters.size() >= 255)
+				this->error(this->peek(), "Can't have more than 255 parameters.");
+			parameters.push_back(this->consume(TokenType::IDENTIFIER, "Expect parameter name."));
+		} while (this->match(TokenType::COMMA));
+	}
+	this->consume(TokenType::RIGHT_PAREN, "Expect ')' after parameters.");
+
+	this->consume(TokenType::LEFT_BRACE, "Expect '{' before " + kind + " body.");
+	vector<Stmt*> body = this->block();
+
+	return new Function(name, parameters, body);
+}
+
+Stmt* Parser::returnStatement()
+{
+	Token* keyword = this->previous();
+	Expr* value = nullptr;
+	if (!this->check(TokenType::SEMICOLON))
+	{
+		value = expression();
+	}
+	this->consume(TokenType::SEMICOLON, "Expect ';' after return value.");
+	return new Return(keyword, value);
 }
 
 

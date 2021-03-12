@@ -44,7 +44,7 @@ void Var::accept(StmtVisitor<void>* visitor)
 	visitor->visit(this);
 }
 
-If::If(Expr* condition, Stmt* thenB, Stmt* elseB): condition(condition), thenBranch(thenB), elseBranch(elseB)
+If::If(Expr* condition, Stmt* thenB, Stmt* elseB) : condition(condition), thenBranch(thenB), elseBranch(elseB)
 {
 
 }
@@ -54,7 +54,7 @@ void If::accept(StmtVisitor<void>* visitor)
 	visitor->visit(this);
 }
 
-While::While(Expr* condition, Stmt* body): condition(condition), body(body)
+While::While(Expr* condition, Stmt* body) : condition(condition), body(body)
 {
 
 }
@@ -62,4 +62,25 @@ While::While(Expr* condition, Stmt* body): condition(condition), body(body)
 void While::accept(StmtVisitor<void>* visitor)
 {
 	visitor->visit(this);
+}
+
+Function::Function(Token* name, vector<Token*> params, vector<Stmt*> body) : name(name), params(std::move(params)),
+																			 body(std::move(body))
+{
+
+}
+
+void Function::accept(StmtVisitor<void>* visitor)
+{
+	return visitor->visit(this);
+}
+
+Return::Return(Token* keyword, Expr* value) : keyword(keyword), value(value)
+{
+
+}
+
+void Return::accept(StmtVisitor<void>* visitor)
+{
+	return visitor->visit(this);
 }

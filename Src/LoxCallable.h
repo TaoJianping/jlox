@@ -9,8 +9,8 @@
 #include <variant>
 #include <string>
 #include "Type.h"
+#include "Interpreter.h"
 
-class Interpreter;
 using std::vector;
 
 class LoxCallable

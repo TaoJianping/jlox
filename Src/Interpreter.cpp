@@ -7,6 +7,8 @@
 #include "RunTimeException.h"
 #include "Lox.h"
 #include "LoxCallable.h"
+#include "LoxFunction.h"
+#include "ReturnStatement.h"
 #include <sstream>
 
 LoxType Interpreter::visit(const Literal* expr)
@@ -186,6 +188,11 @@ void Interpreter::print(const LoxType& data)
 			std::cout << "false" << std::endl;
 		}
 	}
+	else if (data.index() == (size_t) LoxTypeIndex::Function)
+	{
+		LoxCallable* function = std::get<LoxCallable*>(data);
+		std::cout << dynamic_cast<LoxFunction*>(function) << std::endl;
+	}
 	else if (data.index() == 0)
 	{
 		std::cout << "nil" << std::endl;
@@ -270,7 +277,11 @@ void Interpreter::executeBlock(vector<Stmt*> statements, Environment* env)
 		std::cout << "Found Block Fault" << std::endl;
 		this->environment = previousEnv;
 	}
-
+	catch (ReturnStatement& returnStatement)
+	{
+		this->environment = previousEnv;
+		throw ReturnStatement(returnStatement.value);
+	}
 }
 
 void Interpreter::visit(const If* expr)
@@ -344,5 +355,30 @@ Interpreter::Interpreter()
 Interpreter::~Interpreter()
 {
 	delete this->globals;
+}
+
+Environment* Interpreter::getGlobalEnvironment() const
+{
+	return this->globals;
+}
+
+void Interpreter::visit(const Function* stmt)
+{
+	auto function = new LoxFunction(stmt);
+	this->environment->define(stmt->name->getLexeme(), function);
+}
+
+void Interpreter::visit(const Return* expr)
+{
+	LoxType value = std::monostate();
+	if (expr->value != nullptr)
+		value = this->evaluate(expr->value);
+
+	throw ReturnStatement(value);
+}
+
+Environment* Interpreter::getEnvironment() const
+{
+	return this->environment;
 }
 

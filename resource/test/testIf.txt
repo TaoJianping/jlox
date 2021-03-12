@@ -1,5 +1,5 @@
 var a = true;
-
+var b = false;
 if (a)
 {
     a = false;
@@ -10,5 +10,8 @@ else
     print 345;
 }
 
+
+if (b)
+    print b;
 
 print a;

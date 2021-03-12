@@ -20,12 +20,11 @@ using Lexeme::Token;
 class Environment
 {
 private:
-	unordered_map<string, LoxType> values;
 	Environment* enclosing;
 public:
+	unordered_map<string, LoxType> values;
 	Environment();
 	explicit Environment(Environment* enclosing);
-
 	void define(const string& name, LoxType value);
 	LoxType get(Token* name);
 	void assign(Token* name, LoxType value);

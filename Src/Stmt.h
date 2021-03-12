@@ -23,9 +23,13 @@ class Print;
 
 class Var;
 
+class Function;
+
 class If;
 
 class While;
+
+class Return;
 
 template<typename T>
 class StmtVisitor
@@ -42,6 +46,10 @@ public:
 	virtual T visit(const If* expr) = 0;
 
 	virtual T visit(const While* expr) = 0;
+
+	virtual T visit(const Function* expr) = 0;
+
+	virtual T visit(const Return* expr) = 0;
 };
 
 
@@ -85,6 +93,16 @@ public:
 };
 
 
+class Return : public Stmt
+{
+public:
+	Token* keyword;
+	Expr* value;
+
+	Return(Token* keyword, Expr* value);
+	void accept(StmtVisitor<void>* visitor) override;
+};
+
 class Var : public Stmt
 {
 public:
@@ -92,6 +110,19 @@ public:
 	Expr* initializer;
 
 	Var(Token* name, Expr* initializer);
+
+	void accept(StmtVisitor<void>* visitor) override;
+};
+
+
+class Function : public Stmt
+{
+public:
+	Token* name;
+	vector<Token*> params;
+	vector<Stmt*> body;
+
+	Function(Token* name, vector<Token*> params, vector<Stmt*> body);
 
 	void accept(StmtVisitor<void>* visitor) override;
 };

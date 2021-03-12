@@ -19,12 +19,15 @@ private:
 	void print(const LoxType& data);
 	LoxType evaluate(Expr* expr);
 	void execute(Stmt* expr);
-	void executeBlock(vector<Stmt*> statements, Environment* env);
 	bool isTruthy(LoxType object);
 	bool isEqual(const LoxType& a, const LoxType& b);
 	void checkNumberOperand(Lexeme::Token* _operator, const LoxType& right);
 	void checkNumberOperands(Lexeme::Token* _operator, const LoxType& left, const LoxType& right);
 public:
+	[[nodiscard]] Environment* getGlobalEnvironment() const;
+	[[nodiscard]] Environment* getEnvironment() const;
+	void executeBlock(vector<Stmt*> statements, Environment* env);
+
 	LoxType visit(const Literal* expr) override;
 	LoxType visit(const Grouping* expr) override;
 	LoxType visit(const Unary* expr) override;
@@ -38,6 +41,8 @@ public:
 	void visit(const Expression *expr) override;
 	void visit(const Print *expr) override;
 	void visit(const Var *expr) override;
+	void visit(const Function *expr) override;
+	void visit(const Return *expr) override;
 	void visit(const If *expr) override;
 	void visit(const While *expr) override;
 
