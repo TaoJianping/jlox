@@ -13,7 +13,8 @@ class LoxFunction : public LoxCallable
 private:
 public:
 	const Function* declaration;
-	explicit LoxFunction(const Function* declaration);
+	Environment* closure;
+	LoxFunction(const Function* declaration, Environment* closure);
 	int arity() override;
 	LoxType call(Interpreter *interpreter, vector<LoxType> arguments) override;
 

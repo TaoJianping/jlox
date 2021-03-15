@@ -36,3 +36,8 @@ TEST(testInterpreter, testReturn) {
 	auto lox = Lox();
 	lox.runFile("../../resource/test/testReturn.txt");
 }
+
+TEST(testInterpreter, testClosure) {
+	auto lox = Lox();
+	lox.runFile("../../resource/test/testClosure.txt");
+}

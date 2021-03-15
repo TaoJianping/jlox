@@ -7,23 +7,22 @@
 #include "ReturnStatement.h"
 #include "variant"
 
-LoxFunction::LoxFunction(const Function* declaration): declaration(declaration)
+LoxFunction::LoxFunction(const Function* declaration, Environment* closure): declaration(declaration), closure(closure)
 {
 
 }
 
 LoxType LoxFunction::call(Interpreter* interpreter, vector<LoxType> arguments)
 {
-	auto data = std::get<double>(arguments[0]);
-	auto environment = Environment(interpreter->getGlobalEnvironment());
+	auto environment = new Environment(this->closure);
 	for (size_t i = 0; i < declaration->params.size(); ++i)
 	{
-		environment.define(declaration->params.at(i)->getLexeme(), arguments.at(i));
+		environment->define(declaration->params.at(i)->getLexeme(), arguments.at(i));
 	}
 
 	try
 	{
-		interpreter->executeBlock(declaration->body, &environment);
+		interpreter->executeBlock(declaration->body, environment);
 	}
 	catch (ReturnStatement& returnStatement)
 	{

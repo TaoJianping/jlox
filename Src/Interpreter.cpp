@@ -364,7 +364,7 @@ Environment* Interpreter::getGlobalEnvironment() const
 
 void Interpreter::visit(const Function* stmt)
 {
-	auto function = new LoxFunction(stmt);
+	auto function = new LoxFunction(stmt, this->environment);
 	this->environment->define(stmt->name->getLexeme(), function);
 }
 
