@@ -16,12 +16,22 @@ LoxType Literal::accept(Visitor<LoxType>* visitor)
 	return visitor->visit(this);
 }
 
+void Literal::accept(Visitor<void>* visitor)
+{
+	return visitor->visit(this);
+}
+
 std::string Unary::accept(Visitor<std::string>* visitor)
 {
 	return visitor->visit(this);
 }
 
 LoxType Unary::accept(Visitor<LoxType>* visitor)
+{
+	return visitor->visit(this);
+}
+
+void Unary::accept(Visitor<void>* visitor)
 {
 	return visitor->visit(this);
 }
@@ -36,12 +46,22 @@ LoxType Grouping::accept(Visitor<LoxType>* visitor)
 	return visitor->visit(this);
 }
 
+void Grouping::accept(Visitor<void>* visitor)
+{
+	return visitor->visit(this);
+}
+
 std::string Binary::accept(Visitor<std::string>* visitor)
 {
 	return visitor->visit(this);
 }
 
 LoxType Binary::accept(Visitor<LoxType>* visitor)
+{
+	return visitor->visit(this);
+}
+
+void Binary::accept(Visitor<void>* visitor)
 {
 	return visitor->visit(this);
 }
@@ -57,6 +77,11 @@ std::string Variable::accept(Visitor<std::string>* visitor)
 }
 
 LoxType Variable::accept(Visitor<LoxType>* visitor)
+{
+	return visitor->visit(this);
+}
+
+void Variable::accept(Visitor<void>* visitor)
 {
 	return visitor->visit(this);
 }
@@ -80,6 +105,11 @@ std::string Assign::accept(Visitor<std::string>* visitor)
 	return std::string();
 }
 
+void Assign::accept(Visitor<void>* visitor)
+{
+	return visitor->visit(this);
+}
+
 Logical::Logical(Expr* left, Token* _operator, Expr* right) : left(left), _operator(_operator), right(right)
 {
 
@@ -91,6 +121,11 @@ std::string Logical::accept(Visitor<std::string>* visitor)
 }
 
 LoxType Logical::accept(Visitor<LoxType>* visitor)
+{
+	return visitor->visit(this);
+}
+
+void Logical::accept(Visitor<void>* visitor)
 {
 	return visitor->visit(this);
 }
@@ -107,6 +142,11 @@ LoxType Call::accept(Visitor<LoxType>* visitor)
 }
 
 std::string Call::accept(Visitor<std::string>* visitor)
+{
+	return visitor->visit(this);
+}
+
+void Call::accept(Visitor<void>* visitor)
 {
 	return visitor->visit(this);
 }

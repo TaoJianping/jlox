@@ -10,11 +10,17 @@
 #include "Environment.h"
 #include "Type.h"
 
+#include <map>
+
+using std::map;
+
 class Interpreter : public Visitor<LoxType>, public StmtVisitor<void>
 {
 private:
 	Environment* globals = new Environment();
 	Environment* environment = this->globals;
+
+	map<const Expr*, int> locals {};
 
 	void print(const LoxType& data);
 	LoxType evaluate(Expr* expr);
@@ -23,10 +29,12 @@ private:
 	bool isEqual(const LoxType& a, const LoxType& b);
 	void checkNumberOperand(Lexeme::Token* _operator, const LoxType& right);
 	void checkNumberOperands(Lexeme::Token* _operator, const LoxType& left, const LoxType& right);
+	LoxType lookUpVariable(Token* name, const Expr* expr);
 public:
 	[[nodiscard]] Environment* getGlobalEnvironment() const;
 	[[nodiscard]] Environment* getEnvironment() const;
 	void executeBlock(vector<Stmt*> statements, Environment* env);
+	void resolve(const Expr* expr, int depth);
 
 	LoxType visit(const Literal* expr) override;
 	LoxType visit(const Grouping* expr) override;

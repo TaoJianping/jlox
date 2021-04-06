@@ -188,7 +188,7 @@ void Interpreter::print(const LoxType& data)
 			std::cout << "false" << std::endl;
 		}
 	}
-	else if (data.index() == (size_t) LoxTypeIndex::Function)
+	else if (data.index() == (size_t)LoxTypeIndex::Function)
 	{
 		LoxCallable* function = std::get<LoxCallable*>(data);
 		std::cout << dynamic_cast<LoxFunction*>(function) << std::endl;
@@ -242,13 +242,25 @@ void Interpreter::interpret(const vector<Stmt*>& statements)
 
 LoxType Interpreter::visit(const Variable* expr)
 {
-	return this->environment->get(expr->name);
+//	return this->environment->get(expr->name);
+	return this->lookUpVariable(expr->name, expr);
 }
 
 LoxType Interpreter::visit(const Assign* expr)
 {
 	LoxType value = this->evaluate(expr->value);
-	this->environment->assign(expr->name, value);
+//	this->environment->assign(expr->name, value);
+	auto contains = locals.find(expr);
+
+	if (contains != locals.end())
+	{
+		environment->assignAt(locals.at(expr), expr->name, value);
+	}
+	else
+	{
+		globals->assign(expr->name, value);
+	}
+
 	return value;
 }
 
@@ -380,5 +392,25 @@ void Interpreter::visit(const Return* expr)
 Environment* Interpreter::getEnvironment() const
 {
 	return this->environment;
+}
+
+void Interpreter::resolve(const Expr* expr, int depth)
+{
+	this->locals[expr] = depth;
+}
+
+LoxType Interpreter::lookUpVariable(Token* name, const Expr* expr)
+{
+//	int distance = locals.at(expr);
+	auto contains = locals.find(expr);
+
+	if (contains != locals.end())
+	{
+		return this->environment->getAt(this->locals.at(expr), name->getLexeme());
+	}
+	else
+	{
+		return this->globals->get(name);
+	}
 }
 

@@ -52,4 +52,25 @@ Environment::Environment()
 Environment::Environment(Environment* enclosing)
 {
 	this->enclosing = enclosing;
+}
+
+LoxType Environment::getAt(int distance, string name)
+{
+	return ancestor(distance)->values.at(name);
+}
+
+Environment* Environment::ancestor(int distance)
+{
+	Environment* environment = this;
+	for (int i = 0; i < distance; i++)
+	{
+		environment = environment->enclosing;
+	}
+
+	return environment;
+}
+
+void Environment::assignAt(int distance, Token* name, LoxType value)
+{
+	this->ancestor(distance)->values.at(name->getLexeme()) = std::move(value);
 };

@@ -6,6 +6,7 @@
 #include "Scanner.h"
 #include "Parser.h"
 #include "Interpreter.h"
+#include "Resolver.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -75,12 +76,23 @@ void Lox::run(string const& source)
 	auto tokens = scanner.scanTokens();
 	auto parser = new Parser(tokens);
 	auto statements = parser->parse();
-	auto interpreter = Interpreter();
-	interpreter.interpret(statements);
+
 	if (Lox::hasError)
 	{
 		exit(65);
 	}
+
+	auto interpreter = Interpreter();
+	auto resolver = new Resolver(&interpreter);
+	resolver->resolve(statements);
+
+	if (Lox::hasError)
+	{
+		exit(65);
+	}
+
+	interpreter.interpret(statements);
+
 	if (Lox::hadRuntimeError)
 	{
 		exit(70);

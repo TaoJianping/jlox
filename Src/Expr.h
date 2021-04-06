@@ -49,6 +49,7 @@ class Expr {
 public:
 	virtual std::string accept(Visitor<std::string>* visitor) = 0;
 	virtual LoxType accept(Visitor<LoxType>* visitor) = 0;
+	virtual void accept(Visitor<void>* visitor) = 0;
 };
 
 
@@ -60,6 +61,7 @@ public:
 	Expr* right;
 	std::string accept(Visitor<std::string>* visitor) override;
 	LoxType accept(Visitor<LoxType>* visitor) override;
+	void accept(Visitor<void>* visitor) override;
 };
 
 
@@ -73,6 +75,7 @@ public:
 	Call(Expr* callee, Token* paren, vector<Expr*> arguments);
 	std::string accept(Visitor<std::string>* visitor) override;
 	LoxType accept(Visitor<LoxType>* visitor) override;
+	void accept(Visitor<void>* visitor) override;
 };
 
 
@@ -82,6 +85,7 @@ public:
 	explicit Grouping(Expr* e) : expression(e) {};
 	std::string accept(Visitor<std::string>* visitor) override;
 	LoxType accept(Visitor<LoxType>* visitor) override;
+	void accept(Visitor<void>* visitor) override;
 };
 
 
@@ -92,6 +96,7 @@ public:
 
 	std::string accept(Visitor<std::string>* visitor) override;
 	LoxType accept(Visitor<LoxType>* visitor) override;
+	void accept(Visitor<void>* visitor) override;
 };
 
 
@@ -102,6 +107,7 @@ public:
 	Unary(Lexeme::Token* o, Expr* r) : m_operator(o), right(r) {};
 	std::string accept(Visitor<std::string>* visitor) override;
 	LoxType accept(Visitor<LoxType>* visitor) override;
+	void accept(Visitor<void>* visitor) override;
 };
 
 
@@ -112,6 +118,7 @@ public:
 	explicit Variable(Token* token);
 	std::string accept(Visitor<std::string>* visitor) override;
 	LoxType accept(Visitor<LoxType>* visitor) override;
+	void accept(Visitor<void>* visitor) override;
 };
 
 
@@ -123,6 +130,7 @@ public:
 	Assign(Token* name, Expr* value);
 	std::string accept(Visitor<std::string>* visitor) override;
 	LoxType accept(Visitor<LoxType>* visitor) override;
+	void accept(Visitor<void>* visitor) override;
 };
 
 
@@ -136,6 +144,7 @@ public:
 	Logical(Expr* left, Token* _operator, Expr* right);
 	std::string accept(Visitor<std::string>* visitor) override;
 	LoxType accept(Visitor<LoxType>* visitor) override;
+	void accept(Visitor<void>* visitor) override;
 };
 
 //class Ternary : public Expr {
