@@ -46,6 +46,7 @@ public:
 	LoxType visit(const Call* expr) override;
 
 	void visit(const Block *expr) override;
+	void visit(const Class *expr) override;
 	void visit(const Expression *expr) override;
 	void visit(const Print *expr) override;
 	void visit(const Var *expr) override;

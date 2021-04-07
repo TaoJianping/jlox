@@ -6,12 +6,11 @@
 #define JLOXTESTS_TYPE_H
 
 #include <variant>
+//#include "LoxClass.h"
 
 class LoxCallable;
-
-class test {
-	virtual int a() = 0;
-};
+class LoxClass;
+class LoxInstance;
 
 enum class LoxTypeIndex : size_t
 {
@@ -20,9 +19,11 @@ enum class LoxTypeIndex : size_t
 	Number,
 	String,
 	Function,
+	Class,
+	Instance,
 };
 
-using LoxType = std::variant<std::monostate, bool, double, std::string, LoxCallable*>;
+using LoxType = std::variant<std::monostate, bool, double, std::string, LoxCallable*, LoxClass*, LoxInstance*>;
 
 
 #endif //JLOXTESTS_TYPE_H

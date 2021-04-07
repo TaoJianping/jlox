@@ -59,6 +59,7 @@ public:
 	void visit(const Literal *expr) override;
 	void visit(const Logical *expr) override;
 	void visit(const Unary *expr) override;
+	void visit(const Class *expr) override;
 };
 
 

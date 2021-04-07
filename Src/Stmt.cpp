@@ -84,3 +84,14 @@ void Return::accept(StmtVisitor<void>* visitor)
 {
 	return visitor->visit(this);
 }
+
+Class::Class(Token* name, Variable* superclass, vector<Function*> methods): name(name), superclass(superclass),
+																			methods(std::move(methods))
+{
+
+}
+
+void Class::accept(StmtVisitor<void>* visitor)
+{
+	return visitor->visit(this);
+}

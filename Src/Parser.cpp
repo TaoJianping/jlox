@@ -265,10 +265,15 @@ Stmt* Parser::declaration()
 {
 	try
 	{
+		if (this->match(TokenType::CLASS))
+			return this->classDeclaration();
+
 		if (this->match(TokenType::FUN))
 			return this->function("function");
+
 		if (this->match(TokenType::VAR))
 			return this->varDeclaration();
+
 		return statement();
 	}
 	catch (ParseException& pe)
@@ -525,6 +530,21 @@ Stmt* Parser::returnStatement()
 	}
 	this->consume(TokenType::SEMICOLON, "Expect ';' after return value.");
 	return new Return(keyword, value);
+}
+
+Stmt* Parser::classDeclaration()
+{
+	auto name = this->consume(Lexeme::TokenType::IDENTIFIER, "Expect class name.");
+	this->consume(Lexeme::TokenType::LEFT_BRACE, "Expect '{' before class body.");
+
+	vector<Function*> methods {};
+	while (!this->check(Lexeme::TokenType::RIGHT_BRACE) && !this->isAtEnd())
+	{
+		methods.push_back(this->function("method"));
+	}
+
+	this->consume(Lexeme::TokenType::RIGHT_BRACE, "Expect '}' after class body.");
+	return new Class(name, nullptr, methods);
 }
 
 

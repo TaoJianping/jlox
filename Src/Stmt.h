@@ -31,6 +31,8 @@ class While;
 
 class Return;
 
+class Class;
+
 template<typename T>
 class StmtVisitor
 {
@@ -50,6 +52,8 @@ public:
 	virtual T visit(const Function* expr) = 0;
 
 	virtual T visit(const Return* expr) = 0;
+
+	virtual T visit(const Class* expr) = 0;
 };
 
 
@@ -66,6 +70,19 @@ public:
 	vector<Stmt*> statements;
 
 	explicit Block(vector<Stmt*> statements);
+
+	void accept(StmtVisitor<void>* visitor) override;
+};
+
+
+class Class : public Stmt
+{
+public:
+	Token* name;
+	Variable* superclass;
+	vector<Function*> methods{};
+
+	Class(Token* name, Variable* superclass, vector<Function*> methods);
 
 	void accept(StmtVisitor<void>* visitor) override;
 };

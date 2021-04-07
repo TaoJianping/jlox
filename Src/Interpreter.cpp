@@ -10,6 +10,8 @@
 #include "LoxFunction.h"
 #include "ReturnStatement.h"
 #include <sstream>
+#include "LoxClass.h"
+#include "LoxInstance.h"
 
 LoxType Interpreter::visit(const Literal* expr)
 {
@@ -45,7 +47,7 @@ LoxType Interpreter::visit(const Unary* expr)
 	}
 	}
 
-	return nullptr;
+	return std::monostate();
 }
 
 LoxType Interpreter::visit(const Binary* expr)
@@ -109,7 +111,7 @@ LoxType Interpreter::visit(const Binary* expr)
 		return this->isEqual(left, right);
 	}
 
-	return nullptr;
+	return std::monostate();
 }
 
 bool Interpreter::isEqual(const LoxType& a, const LoxType& b)
@@ -192,6 +194,12 @@ void Interpreter::print(const LoxType& data)
 	{
 		LoxCallable* function = std::get<LoxCallable*>(data);
 		std::cout << dynamic_cast<LoxFunction*>(function) << std::endl;
+	}
+	else if (data.index() == (size_t)LoxTypeIndex::Instance)
+	{
+		LoxInstance* ins = std::get<LoxInstance*>(data);
+
+		std::cout << ins->toString() << std::endl;
 	}
 	else if (data.index() == 0)
 	{
@@ -342,9 +350,23 @@ LoxType Interpreter::visit(const Call* expr)
 		arguments.push_back(this->evaluate(argument));
 	}
 
-	if (callee.index() != (size_t)LoxTypeIndex::Function)
+	if (callee.index() != (size_t)LoxTypeIndex::Function && callee.index() != (size_t)LoxTypeIndex::Class)
 	{
 		throw RunTimeException("Can only call functions and classes.", expr->paren);
+	}
+
+	if (callee.index() == (size_t)LoxTypeIndex::Class)
+	{
+		LoxClass* c = std::get<LoxClass*>(callee);
+		if (arguments.size() != c->arity())
+		{
+			std::ostringstream stringStream;
+			stringStream << "Expected " << c->arity()
+						 << " arguments but got " << arguments.size() << ".";
+			throw RunTimeException(stringStream.str(), expr->paren);
+		}
+
+		return c->call(this, arguments);
 	}
 
 	LoxCallable* function = std::get<LoxCallable*>(callee);
@@ -412,5 +434,12 @@ LoxType Interpreter::lookUpVariable(Token* name, const Expr* expr)
 	{
 		return this->globals->get(name);
 	}
+}
+
+void Interpreter::visit(const Class* expr)
+{
+	this->environment->define(expr->name->getLexeme(), std::monostate());
+	auto c = new LoxClass(expr->name->getLexeme());
+	this->environment->assign(expr->name, c);
 }
 

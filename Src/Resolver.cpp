@@ -204,3 +204,9 @@ void Resolver::visit(const Unary* expr)
 {
 	this->resolve(expr->right);
 }
+
+void Resolver::visit(const Class* expr)
+{
+	this->declare(expr->name);
+	this->define(expr->name);
+}

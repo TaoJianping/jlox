@@ -46,3 +46,8 @@ TEST(testInterpreter, testResolve) {
 	auto lox = Lox();
 	lox.runFile("../../resource/test/testResolve.txt");
 }
+
+TEST(testInterpreter, testClass1) {
+	auto lox = Lox();
+	lox.runFile("../../resource/test/testClass1.txt");
+}

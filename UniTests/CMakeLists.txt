@@ -55,7 +55,7 @@ set(
         TestTools.h
         ../Src/Parser.h
         ../Src/Parser.cpp
-        ../Src/Interpreter.cpp ../Src/Interpreter.h ../Src/RunTimeException.cpp ../Src/RunTimeException.h TestInterpreter.cpp TestInterpreter.h ../Src/Stmt.cpp ../Src/Stmt.h ../Src/Environment.cpp ../Src/Environment.h ../Src/LoxCallable.cpp ../Src/LoxCallable.h ../Src/Type.h ../Src/LoxFunction.cpp ../Src/LoxFunction.h ../Src/ReturnStatement.h ../Src/Resolver.cpp ../Src/Resolver.h)
+        ../Src/Interpreter.cpp ../Src/Interpreter.h ../Src/RunTimeException.cpp ../Src/RunTimeException.h TestInterpreter.cpp TestInterpreter.h ../Src/Stmt.cpp ../Src/Stmt.h ../Src/Environment.cpp ../Src/Environment.h ../Src/LoxCallable.cpp ../Src/LoxCallable.h ../Src/Type.h ../Src/LoxFunction.cpp ../Src/LoxFunction.h ../Src/ReturnStatement.h ../Src/Resolver.cpp ../Src/Resolver.h ../Src/LoxClass.cpp ../Src/LoxClass.h ../Src/LoxInstance.cpp ../Src/LoxInstance.h)
 
 
 ADD_EXECUTABLE(LoxTest ${Headers} ${Sources} ${ExecutableFile})

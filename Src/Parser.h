@@ -63,6 +63,8 @@ private:
 
 	Function* function(string kind);
 
+	Stmt* classDeclaration();
+
 	Stmt* printStatement();
 
 	Stmt* returnStatement();
