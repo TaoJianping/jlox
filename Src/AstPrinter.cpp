@@ -70,3 +70,13 @@ std::string AstPrinter::visit(const Call* expr)
 {
 	return std::string();
 }
+
+std::string AstPrinter::visit(const Get* expr)
+{
+	return std::__cxx11::string();
+}
+
+std::string AstPrinter::visit(const Set* expr)
+{
+	return std::__cxx11::string();
+}

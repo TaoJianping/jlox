@@ -334,6 +334,11 @@ Expr* Parser::assignment()
 			Token* name = castExpr->name;
 			return new Assign(name, value);
 		}
+		else if (auto getExpr = dynamic_cast<Get*>(expr); getExpr != nullptr)
+		{
+			return new Set(getExpr->object, getExpr->name, value);
+		}
+
 
 		throw this->error(equals, "Invalid assignment target.");
 	}
@@ -468,6 +473,11 @@ Expr* Parser::call()
 		{
 			expr = this->finishCall(expr);
 		}
+		else if (this->match(TokenType::DOT))
+		{
+			auto name = this->consume(TokenType::IDENTIFIER, "Expect property name after '.'.");
+			expr = new Get(expr, name);
+		}
 		else
 		{
 			break;
@@ -485,7 +495,8 @@ Expr* Parser::finishCall(Expr* callee)
 	{
 		do
 		{
-			if (arguments.size() >= 255) {
+			if (arguments.size() >= 255)
+			{
 				this->error(this->peek(), "Can't have more than 255 arguments.");
 			}
 			arguments.push_back(this->expression());
@@ -494,7 +505,7 @@ Expr* Parser::finishCall(Expr* callee)
 
 	Token* paren = this->consume(TokenType::RIGHT_PAREN, "Expect ')' after arguments.");
 
-	return new Call(callee,paren, std::move(arguments));
+	return new Call(callee, paren, std::move(arguments));
 }
 
 Function* Parser::function(string kind)
@@ -537,7 +548,7 @@ Stmt* Parser::classDeclaration()
 	auto name = this->consume(Lexeme::TokenType::IDENTIFIER, "Expect class name.");
 	this->consume(Lexeme::TokenType::LEFT_BRACE, "Expect '{' before class body.");
 
-	vector<Function*> methods {};
+	vector<Function*> methods{};
 	while (!this->check(Lexeme::TokenType::RIGHT_BRACE) && !this->isAtEnd())
 	{
 		methods.push_back(this->function("method"));

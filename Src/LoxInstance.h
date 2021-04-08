@@ -7,12 +7,17 @@
 
 #include "LoxClass.h"
 
+using std::map;
+using std::string;
 
 class LoxInstance
 {
 private:
 	const LoxClass* klass;
+	map<string, LoxType> fields {};
 public:
+	LoxType get(Token* name);
+	void set(Token* name, LoxType value);
 	explicit LoxInstance(const LoxClass* klass);
 	string toString();
 };

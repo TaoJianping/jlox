@@ -150,3 +150,43 @@ void Call::accept(Visitor<void>* visitor)
 {
 	return visitor->visit(this);
 }
+
+Get::Get(Expr* object, Token* name) : object(object), name(name)
+{
+
+}
+
+std::string Get::accept(Visitor<std::string>* visitor)
+{
+	return std::__cxx11::string();
+}
+
+LoxType Get::accept(Visitor<LoxType>* visitor)
+{
+	return visitor->visit(this);
+}
+
+void Get::accept(Visitor<void>* visitor)
+{
+	return visitor->visit(this);
+}
+
+Set::Set(Expr* object, Token* name, Expr* value) : object(object), name(name), value(value)
+{
+
+}
+
+std::string Set::accept(Visitor<std::string>* visitor)
+{
+	return visitor->visit(this);
+}
+
+LoxType Set::accept(Visitor<LoxType>* visitor)
+{
+	return visitor->visit(this);
+}
+
+void Set::accept(Visitor<void>* visitor)
+{
+	return visitor->visit(this);
+}

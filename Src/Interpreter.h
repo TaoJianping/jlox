@@ -44,6 +44,8 @@ public:
 	LoxType visit(const Assign* expr) override;
 	LoxType visit(const Logical* expr) override;
 	LoxType visit(const Call* expr) override;
+	LoxType visit(const Get* expr) override;
+	LoxType visit(const Set* expr) override;
 
 	void visit(const Block *expr) override;
 	void visit(const Class *expr) override;

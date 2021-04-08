@@ -42,6 +42,8 @@ public:
 	virtual T visit(const Assign* expr) = 0;
 	virtual T visit(const Logical* expr) = 0;
 	virtual T visit(const Call* expr) = 0;
+	virtual T visit(const Get* expr) = 0;
+	virtual T visit(const Set* expr) = 0;
 };
 
 
@@ -142,6 +144,33 @@ public:
 	Expr* right;
 
 	Logical(Expr* left, Token* _operator, Expr* right);
+	std::string accept(Visitor<std::string>* visitor) override;
+	LoxType accept(Visitor<LoxType>* visitor) override;
+	void accept(Visitor<void>* visitor) override;
+};
+
+
+class Get : public Expr
+{
+public:
+	Expr* object;
+	Token* name;
+
+	Get(Expr* object, Token* name);
+	std::string accept(Visitor<std::string>* visitor) override;
+	LoxType accept(Visitor<LoxType>* visitor) override;
+	void accept(Visitor<void>* visitor) override;
+};
+
+
+class Set : public Expr
+{
+public:
+	Expr* object;
+	Token* name;
+	Expr* value;
+
+	Set(Expr* object, Token* name, Expr* value);
 	std::string accept(Visitor<std::string>* visitor) override;
 	LoxType accept(Visitor<LoxType>* visitor) override;
 	void accept(Visitor<void>* visitor) override;

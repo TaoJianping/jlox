@@ -209,4 +209,21 @@ void Resolver::visit(const Class* expr)
 {
 	this->declare(expr->name);
 	this->define(expr->name);
+
+	for (auto method : expr->methods)
+	{
+		auto declaration = FunctionType::METHOD;
+		this->resolveFunction(method, declaration);
+	}
+}
+
+void Resolver::visit(const Get* expr)
+{
+	this->resolve(expr->object);
+}
+
+void Resolver::visit(const Set* expr)
+{
+	this->resolve(expr->value);
+	this->resolve(expr->object);
 }

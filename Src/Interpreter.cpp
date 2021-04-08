@@ -439,7 +439,41 @@ LoxType Interpreter::lookUpVariable(Token* name, const Expr* expr)
 void Interpreter::visit(const Class* expr)
 {
 	this->environment->define(expr->name->getLexeme(), std::monostate());
-	auto c = new LoxClass(expr->name->getLexeme());
+	map<string, LoxFunction*> methods {};
+	for (auto method : expr->methods)
+	{
+		auto function = new LoxFunction(method, environment);
+		methods[method->name->getLexeme()] = function;
+	}
+
+	auto c = new LoxClass(expr->name->getLexeme(), methods);
 	this->environment->assign(expr->name, c);
+}
+
+LoxType Interpreter::visit(const Get* expr)
+{
+	auto object = this->evaluate(expr->object);
+	if (object.index() == (std::size_t)LoxTypeIndex::Instance)
+	{
+		auto instance = std::get<LoxInstance*>(object);
+		return instance->get(expr->name);
+	}
+
+	throw RunTimeException("Only instances have properties.", expr->name);
+}
+
+LoxType Interpreter::visit(const Set* expr)
+{
+	auto object = this->evaluate(expr->object);
+
+	if (object.index() != (size_t) LoxTypeIndex::Instance)
+	{
+		throw RunTimeException("Only instances have fields.", expr->name);
+	}
+
+	auto value = this->evaluate(expr->value);
+	auto instance = std::get<LoxInstance*>(object);
+	instance->set(expr->name, value);
+	return value;
 }
 

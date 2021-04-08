@@ -21,7 +21,8 @@ using std::string;
 
 enum class FunctionType {
 	NONE,
-	FUNCTION
+	FUNCTION,
+	METHOD,
 };
 
 class Resolver: public Visitor<void>, public StmtVisitor<void>
@@ -60,6 +61,8 @@ public:
 	void visit(const Logical *expr) override;
 	void visit(const Unary *expr) override;
 	void visit(const Class *expr) override;
+	void visit(const Get *expr) override;
+	void visit(const Set *expr) override;
 };
 
 
