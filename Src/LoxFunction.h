@@ -14,7 +14,9 @@ private:
 public:
 	const Function* declaration;
 	Environment* closure;
-	LoxFunction(const Function* declaration, Environment* closure);
+	bool isInitializer;
+	LoxFunction(const Function* declaration, Environment* closure, bool isInitializer);
+	LoxFunction* bind(LoxInstance* instance);
 	int arity() override;
 	LoxType call(Interpreter *interpreter, vector<LoxType> arguments) override;
 

@@ -56,3 +56,13 @@ TEST(testInterpreter, testClass2) {
 	auto lox = Lox();
 	lox.runFile("../../resource/test/testClass2.txt");
 }
+
+TEST(testInterpreter, testClass3) {
+	auto lox = Lox();
+	lox.runFile("../../resource/test/testClass3.txt");
+}
+
+TEST(testInterpreter, testClass4) {
+	auto lox = Lox();
+	lox.runFile("../../resource/test/testClass4.txt");
+}

@@ -26,7 +26,7 @@ LoxType LoxInstance::get(Token* name)
 
 	LoxFunction* method = this->klass->findMethod(name->getLexeme());
 	if (method != nullptr)
-		return method;
+		return method->bind(this);
 
 	throw RunTimeException("Undefined property '" + name->getLexeme() + "'.", name);
 }

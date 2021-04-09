@@ -398,7 +398,7 @@ Environment* Interpreter::getGlobalEnvironment() const
 
 void Interpreter::visit(const Function* stmt)
 {
-	auto function = new LoxFunction(stmt, this->environment);
+	auto function = new LoxFunction(stmt, this->environment, false);
 	this->environment->define(stmt->name->getLexeme(), function);
 }
 
@@ -442,7 +442,7 @@ void Interpreter::visit(const Class* expr)
 	map<string, LoxFunction*> methods {};
 	for (auto method : expr->methods)
 	{
-		auto function = new LoxFunction(method, environment);
+		auto function = new LoxFunction(method, environment, method->name->getLexeme() == "init");
 		methods[method->name->getLexeme()] = function;
 	}
 
@@ -475,5 +475,10 @@ LoxType Interpreter::visit(const Set* expr)
 	auto instance = std::get<LoxInstance*>(object);
 	instance->set(expr->name, value);
 	return value;
+}
+
+LoxType Interpreter::visit(const This* expr)
+{
+	return this->lookUpVariable(expr->keyword, expr);
 }
 

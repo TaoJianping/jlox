@@ -22,8 +22,15 @@ using std::string;
 enum class FunctionType {
 	NONE,
 	FUNCTION,
+	INITIALIZER,
 	METHOD,
 };
+
+enum class ClassType {
+	NONE,
+	CLASS,
+};
+
 
 class Resolver: public Visitor<void>, public StmtVisitor<void>
 {
@@ -38,6 +45,7 @@ private:
 	void resolveFunction(const Function* function, FunctionType functionType);
 	vector<map<string, bool>* > scopes {};
 	FunctionType currentFunction = FunctionType::NONE;
+	ClassType currentClass = ClassType::NONE;
 public:
 	void resolve(Stmt* statement);
 	void resolve(Expr* statement);
@@ -63,6 +71,7 @@ public:
 	void visit(const Class *expr) override;
 	void visit(const Get *expr) override;
 	void visit(const Set *expr) override;
+	void visit(const This *expr) override;
 };
 
 

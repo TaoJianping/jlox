@@ -20,7 +20,7 @@ private:
 	map<string, LoxFunction*> methods {};
 public:
 	explicit LoxClass(string name, map<string, LoxFunction*> methods);
-	LoxFunction* findMethod(const string& methodName) const;
+	[[nodiscard]] LoxFunction* findMethod(const string& methodName) const;
 	LoxType call(Interpreter *interpreter, vector<LoxType> arguments) override;
 	int arity() override;
 

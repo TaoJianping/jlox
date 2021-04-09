@@ -7,7 +7,8 @@
 #include "ReturnStatement.h"
 #include "variant"
 
-LoxFunction::LoxFunction(const Function* declaration, Environment* closure): declaration(declaration), closure(closure)
+LoxFunction::LoxFunction(const Function* declaration, Environment* closure, bool isInitializer):
+								declaration(declaration), closure(closure), isInitializer(isInitializer)
 {
 
 }
@@ -26,13 +27,22 @@ LoxType LoxFunction::call(Interpreter* interpreter, vector<LoxType> arguments)
 	}
 	catch (ReturnStatement& returnStatement)
 	{
+		if (this->isInitializer)
+			return this->closure->getAt(0, "this");
 		return returnStatement.value;
 	}
-
+	if (this->isInitializer) return closure->getAt(0, "this");
 	return LoxType{std::monostate{}};
 }
 
 int LoxFunction::arity()
 {
 	return this->declaration->params.size();
+}
+
+LoxFunction* LoxFunction::bind(LoxInstance* instance)
+{
+	auto environment = new Environment(this->closure);
+	environment->define("this", instance);
+	return new LoxFunction(this->declaration, environment, this->isInitializer);
 }

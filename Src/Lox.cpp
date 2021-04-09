@@ -46,6 +46,10 @@ void Lox::runFile(string const& path)
 		std::string fileContent(buffer.str());
 		run(fileContent);
 	}
+	else
+	{
+		std::cout << "Not FOUNT FILE!!!" << std::endl;
+	}
 }
 
 void Lox::error(int line, std::string message)

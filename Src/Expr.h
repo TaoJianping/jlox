@@ -44,6 +44,7 @@ public:
 	virtual T visit(const Call* expr) = 0;
 	virtual T visit(const Get* expr) = 0;
 	virtual T visit(const Set* expr) = 0;
+	virtual T visit(const This* expr) = 0;
 };
 
 
@@ -175,6 +176,19 @@ public:
 	LoxType accept(Visitor<LoxType>* visitor) override;
 	void accept(Visitor<void>* visitor) override;
 };
+
+class This : public Expr
+{
+public:
+	Token* keyword;
+
+	explicit This(Token* keyword);
+	std::string accept(Visitor<std::string>* visitor) override;
+	LoxType accept(Visitor<LoxType>* visitor) override;
+	void accept(Visitor<void>* visitor) override;
+};
+
+
 
 //class Ternary : public Expr {
 //private:

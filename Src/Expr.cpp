@@ -190,3 +190,23 @@ void Set::accept(Visitor<void>* visitor)
 {
 	return visitor->visit(this);
 }
+
+This::This(Token* keyword): keyword(keyword)
+{
+
+}
+
+std::string This::accept(Visitor<std::string>* visitor)
+{
+	return visitor->visit(this);
+}
+
+LoxType This::accept(Visitor<LoxType>* visitor)
+{
+	return visitor->visit(this);
+}
+
+void This::accept(Visitor<void>* visitor)
+{
+	return visitor->visit(this);
+}

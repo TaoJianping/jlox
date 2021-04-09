@@ -135,6 +135,11 @@ Expr* Parser::primary()
 		return new Literal(this->previous());
 	}
 
+	if (this->match(TokenType::THIS))
+	{
+		return new This(this->previous());
+	}
+
 	if (this->match(TokenType::IDENTIFIER))
 	{
 		return new Variable(previous());

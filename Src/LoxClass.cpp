@@ -14,12 +14,20 @@ LoxClass::LoxClass(string name, map<string, LoxFunction*> methods) : name(std::m
 
 int LoxClass::arity()
 {
-	return 0;
+	LoxFunction* initializer = this->findMethod("init");
+	if (initializer == nullptr)
+		return 0;
+	return initializer->arity();
 }
 
 LoxType LoxClass::call(Interpreter* interpreter, vector<LoxType> arguments)
 {
 	auto instance = new LoxInstance(this);
+	LoxFunction* initializer = this->findMethod("init");
+	if (initializer != nullptr)
+	{
+		initializer->bind(instance)->call(interpreter, arguments);
+	}
 	return instance;
 }
 

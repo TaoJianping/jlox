@@ -158,6 +158,10 @@ void Resolver::visit(const Return* expr)
 	}
 
 	if (expr->value != nullptr) {
+		if (this->currentFunction == FunctionType::INITIALIZER)
+		{
+			Lox::error(expr->keyword, "Can't return a value from an initializer.");
+		}
 		this->resolve(expr->value);
 	}
 }
@@ -207,14 +211,25 @@ void Resolver::visit(const Unary* expr)
 
 void Resolver::visit(const Class* expr)
 {
+	ClassType enclosingClass = currentClass;
+	currentClass = ClassType::CLASS;
 	this->declare(expr->name);
 	this->define(expr->name);
 
+	this->beginScope();
+	auto top = this->scopes.back();
+	top->insert({"this", true});
 	for (auto method : expr->methods)
 	{
 		auto declaration = FunctionType::METHOD;
+		if (method->name->getLexeme() == "init")
+		{
+			declaration = FunctionType::INITIALIZER;
+		}
 		this->resolveFunction(method, declaration);
 	}
+	this->endScope();
+	currentClass = enclosingClass;
 }
 
 void Resolver::visit(const Get* expr)
@@ -226,4 +241,14 @@ void Resolver::visit(const Set* expr)
 {
 	this->resolve(expr->value);
 	this->resolve(expr->object);
+}
+
+void Resolver::visit(const This* expr)
+{
+	if (this->currentClass == ClassType::NONE)
+	{
+		Lox::error(expr->keyword, "Can't use 'this' outside of a class.");
+		return;
+	}
+	this->resolveLocal(expr, expr->keyword);
 }

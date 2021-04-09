@@ -80,3 +80,8 @@ std::string AstPrinter::visit(const Set* expr)
 {
 	return std::__cxx11::string();
 }
+
+std::string AstPrinter::visit(const This* expr)
+{
+	return std::__cxx11::string();
+}
